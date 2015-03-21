@@ -1,0 +1,367 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     This is a LaTex template to be used for a PhD thesis in the
+%     Department of Physics at Carnegie Mellon University. It is
+%     recommended to input individual chapters, appendices, etc
+%     as separate files. To avoid having to provide multiple files
+%     with this template, simple examples for such separate files
+%     are included with this template.
+%                                                       July 2010
+%
+%     For comments contact: Manfred Paulini <paulini@cmu.edu>
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\documentclass[12pt,twoside]{report}
+%
+% ====================================================================
+%     Include you favorite packages
+%     Here only basic packages used for LaTex with PS output file
+% ====================================================================
+%
+\usepackage{color}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.eps,.ps}
+%
+% ====================================================================
+%     Some formatting suggestions
+% ====================================================================
+%
+\topmargin -0.3in
+\oddsidemargin 0.5in
+\evensidemargin 0.5in
+\textheight 8.5in
+\textwidth 6.0in
+%
+% ====================================================================
+%     The following commands tent to keep LaTex happier in the
+%     placement of figures, tables, etc
+% ====================================================================
+%
+\renewcommand{\textfraction}{0.0}
+\renewcommand{\floatpagefraction}{0.0}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\setcounter{topnumber}{9}
+\setcounter{bottomnumber}{9}
+\setcounter{totalnumber}{9}
+%
+% ====================================================================
+%     Some of the things we need for the title page
+% ====================================================================
+%
+%\author{\\
+%  \\
+%  \\
+%  by \\
+%  \\
+%        Erik Arthur Nelson \\
+%  \\
+%  \\
+%  \\
+%  \\
+%  \\
+%        Submitted in partial fulfillment of the \\
+%        requirements for the degree of \\
+%        Master of Science in Robotics \\
+%        at \\
+%        Carnegie Mellon University \\
+%        of Physics \\
+%        Pittsburgh, Pennsylvania \\
+%  \\
+%        \\
+%  Advised by Professor Aaaaaaa Baaaaaa
+%  \\
+%  \\
+%}
+\author{
+  \\
+  Erik Arthur Nelson \\
+  \today \\
+  \\
+  \includegraphics[width=0.5\textwidth]{cmu_seal.jpeg} \\
+  \\
+  The Robotics Institute \\
+  School of Computer Science \\
+  Carnegie Mellon University \\
+  Pittsburgh, Pennsylvania \\
+  \\
+  {\bf Thesis Committee:} \\
+  Nathan Michael, {\it Chair} \\
+  Two \\
+  Three \\
+  \\
+  \textit{Submitted in partial fulfillment of the requirements} \\
+  \textit{for the degree of Master of Science in Robotics.}
+}
+
+\title{\bf{
+Title Goes Here
+}}
+
+\date{}
+
+%
+% ====================================================================
+%     Input your definition in file definitions.tex here.
+%     A simple example of the content of such a file is given below.
+% ====================================================================
+%
+%\input{definitions}
+%
+%%%%%%%%%%%%%% Example for content of file definitions.tex %%%%%%%%%%%
+\def\ra    {\rightarrow}
+\def\ul    {\underline}
+\def\mevcc {\ifmmode {\mathrm MeV}/c^2 \else MeV$/c^2$\fi}
+\def\BsJpsiPhi {\ensuremath{\Bs \ra J/\psi\,\phi}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\begin{document}
+
+\thispagestyle{empty}
+
+\maketitle
+
+% ====================================================================
+%     Generates one blank page before the 'Abstract'
+% ====================================================================
+
+\thispagestyle{empty} \cleardoublepage
+
+% ====================================================================
+%     Input your abstract in file abstract.tex here.
+%     A simple example of the content of such a file is given below.
+% ====================================================================
+%
+%\include{abstract}
+%
+%%%%%%%%%%%%%% Example for content of file abstract.tex %%%%%%%%%%%%%%
+\begin{abstract}
+
+  This is the most important discovery made in the history of modern
+  physics. We discuss the detailed measurement that solved the mystery
+  of the universe.  This is the most important discovery made in the
+  history of modern physics. We discuss the detailed measurement that
+  solved the mystery of the universe.  This is the most important
+  discovery made in the history of modern physics. We discuss the
+  detailed measurement that solved the mystery of the universe.
+
+\end{abstract}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\thispagestyle{empty} \cleardoublepage
+
+\pagenumbering{roman}
+
+% ====================================================================
+%     Input your acknowledgments in file acknowledgments.tex here.
+%     A simple example of the content of such a file is given below.
+% ====================================================================
+%
+%\include{acknowledgments}
+%
+%%%%%%%%%%%%%% Example for content of file acknowledgments.tex %%%%%%
+\section*{Acknowledgments}
+
+I would like to express my profound gratitude to my advisor and I thank
+everybody else, too.  I would like to express my profound gratitude to
+my advisor and I thank everybody else, too.  I would like to express my
+profound gratitude to my advisor and I thank everybody else, too.  I
+would like to express my profound gratitude to my advisor and I thank
+everybody else, too.  I would like to express my profound gratitude to
+my advisor and I thank everybody else, too.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+\clearpage
+
+\pagenumbering{arabic}
+
+% ====================================================================
+%     Include chapter 1 in file chap_01.tex here.
+%     A simple example of the content of such a file is given below.
+% ====================================================================
+%
+%\include{chap_01}
+%
+%%%%%%%%%%%%%% Example for content of file chap_01.tex %%%%%%%%%%%%%%%
+\chapter{Test 1 - Chapter}
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+\section{Test 1 - Section}
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+% ====================================================================
+%     Uncomment for some simple examples on how to create tables
+%     or include figures.
+% ====================================================================
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% ----------------------------------------------------------------
+\begin{table}[tbh]
+\caption{Summary of the most important results.}
+%
+\begin{center}
+  \begin{tabular}{|c|cc|}
+    \hline
+    A   & B   & C  \\
+    \hline
+    1   & 2   & 3   \\
+    11  & 22  & 33  \\
+    1   & 2   & 3   \\
+    \hline
+  \end{tabular}
+\end{center}
+\label{Tab:table1}
+\end{table}
+%%%%% ----------------------------------------------------------------
+
+%%%%% ----------------------------------------------------------------
+%\begin{figure}[tb]
+%\begin{center}
+%\includegraphics[width=0.5\textwidth]{my_result.eps}
+%\caption{
+%The Nobel prize awarded measurement.
+%}
+%\label{Fig:nobel1}
+%\end{center}
+%\end{figure}
+%%%%% ----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Test 1 - SubSection}
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+\subsubsection{Test 1 - SubSubSection}
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+This is a test, nothing but a test, a test, just a test and a test.
+
+% ====================================================================
+%     Include chapter 2 in file chap_02.tex here.
+%     A simple example of the content of such a file is given below.
+% ====================================================================
+%
+%\include{chap_02}
+%
+%%%%%%%%%%%%%% Example for content of file chap_02.tex %%%%%%%%%%%%%%%
+\chapter{Test 2 - Chapter}
+
+And here we go again.  And here we go again.  And here we go again.  And
+here we go again.  And here we go again.  And here we go again.  And
+here we go again.  And here we go again.  And here we go again.  And
+here we go again.  And here we go again.  And here we go again.
+
+\section{Test 2 - Section}
+
+It's a kind of magic.  A kind of magic.  One dream one soul, one prize.
+One goal, one golden glance of what should be.  It's a kind of magic.
+It's a kind of magic.  A kind of magic.  One dream one soul, one prize.
+One goal, one golden glance of what should be.  It's a kind of magic.
+It's a kind of magic.  A kind of magic.  One dream one soul, one prize.
+One goal, one golden glance of what should be.  It's a kind of magic.
+It's a kind of magic.  A kind of magic.  One dream one soul, one prize.
+One goal, one golden glance of what should be.  It's a kind of magic.
+It's a kind of magic.  A kind of magic.  One dream one soul, one prize.
+One goal, one golden glance of what should be.  It's a kind of magic.
+It's a kind of magic.  A kind of magic.  One dream one soul, one prize.
+One goal, one golden glance of what should be.  It's a kind of magic.
+
+\subsection{Test 2 - SubSection}
+
+I think it's stupid and sad that everything turned out so bad \dots
+I think it's stupid and sad that everything turned out so bad \dots
+I think it's stupid and sad that everything turned out so bad \dots
+I think it's stupid and sad that everything turned out so bad \dots
+I think it's stupid and sad that everything turned out so bad \dots
+I think it's stupid and sad that everything turned out so bad \dots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% ====================================================================
+%     To include references, it is recommended to use BibTex. A simple
+%     example of including references in a file bib.tex is given.
+% ====================================================================
+%
+%\include{bib}
+%
+%%%%%%%%%%%%%% Example for content of file bib.tex %%%%%%%%%%%%%%%
+\begin{thebibliography}{99}
+
+%\cite{Ref:Einstein_1935}
+\bibitem{Ref:Einstein_1935}
+  A.~Einstein, B.~Podolsky and N.~Rosen,
+  ``Can quantum mechanical description of physical reality be considered
+  complete?,''
+  Phys.\ Rev.\  {\bf 47}, 777 (1935).
+
+%\cite{Ref:Fermi_1950}
+\bibitem{Ref:Fermi_1950}
+  E.~Fermi,
+  ``High-energy nuclear events,''
+  Prog.\ Theor.\ Phys.\  {\bf 5}, 570 (1950).
+
+\end{thebibliography}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
