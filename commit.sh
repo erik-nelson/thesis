@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Clean up latex output, add all changes, and commit to repository
 
 # Make sure we have a commit message
