@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm *.aux > /dev/null 2>&1
 rm *.pdfsync > /dev/null 2>&1
 rm *.bbl > /dev/null 2>&1
