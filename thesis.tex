@@ -50,10 +50,11 @@
 \maketitle
 
 % ====================================================================
-%     Single blank page before the 'Abstract'
+%     Single blank page before the abstract
 % ====================================================================
-
+%
 \thispagestyle{empty} \cleardoublepage
+%
 
 % ====================================================================
 %    Abstract
@@ -62,8 +63,13 @@
 \include{content/abstract}
 %
 
+% ====================================================================
+%     Single blank page after the abstract
+% ====================================================================
+%
 \thispagestyle{empty} \cleardoublepage
 \pagenumbering{roman}
+%
 
 % ====================================================================
 %    Acknowledgements
@@ -72,11 +78,16 @@
 \include{content/acknowledgements}
 %
 
+% ====================================================================
+%     Table of contents, list of figures/tables
+% ====================================================================
+%
 \tableofcontents
 \listoftables
 \listoffigures
 \clearpage
 \pagenumbering{arabic}
+%
 
 % ====================================================================
 %    Chapter 1

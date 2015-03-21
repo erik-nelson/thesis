@@ -6,8 +6,8 @@ if [ "$#" -lt 1 ]; then
   exit
 fi
 
-# Clean up latex output
-./clean.sh
+# Make sure the latex file builds...
+./build.sh # build.sh will automatically clean
 
 # Add all changes and commit with the input message
 git add -A
