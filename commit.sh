@@ -1,7 +1,7 @@
 # Clean up latex output, add all changes, and commit to repository
 
 # Make sure we have a commit message
-if [ "$#" -ne 1 ]; then
+if [ "$#" -lt 1 ]; then
   echo "Need commit message"
   exit
 fi
@@ -13,9 +13,10 @@ fi
 git add -A
 git commit -m "$1"
 
-git push -u origin
-#if [ "$#" -ne 2 ]; then
-#  git push -u origin master
-#else
-#  git push -u origin $2
-#fi
+# Push to master if no branch specified,
+# otherwise push to branch on second argument
+if [ "$#" -ne 2 ]; then
+  git push -u origin master
+else
+  git push -u origin $2
+fi
