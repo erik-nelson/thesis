@@ -6,8 +6,10 @@ if [ "$#" -ne 1 ]; then
   exit
 fi
 
+# Clean up latex output
 ./clean.sh
 
+# Add all changes and commit with the input message
 git add -A
 git commit -m "$1"
 git push -u origin master
