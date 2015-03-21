@@ -15,115 +15,36 @@
 \documentclass[12pt,twoside]{report}
 %
 % ====================================================================
-%     Include you favorite packages
-%     Here only basic packages used for LaTex with PS output file
+%    Packages
 % ====================================================================
 %
-\usepackage{color}
-\usepackage{graphicx}
-\DeclareGraphicsExtensions{.eps,.ps}
+\input{support/usepackage}
 %
 % ====================================================================
-%     Some formatting suggestions
+%    Formatting
 % ====================================================================
 %
-\topmargin -0.3in
-\oddsidemargin 0.5in
-\evensidemargin 0.5in
-\textheight 8.5in
-\textwidth 6.0in
+\input{support/formatting}
 %
 % ====================================================================
-%     The following commands tent to keep LaTex happier in the
-%     placement of figures, tables, etc
+%    Author, title, date
 % ====================================================================
 %
-\renewcommand{\textfraction}{0.0}
-\renewcommand{\floatpagefraction}{0.0}
-\renewcommand{\topfraction}{1.0}
-\renewcommand{\bottomfraction}{1.0}
-\setcounter{topnumber}{9}
-\setcounter{bottomnumber}{9}
-\setcounter{totalnumber}{9}
+\input{support/authortitle}
 %
 % ====================================================================
-%     Some of the things we need for the title page
+%    Definitions
 % ====================================================================
 %
-%\author{\\
-%  \\
-%  \\
-%  by \\
-%  \\
-%        Erik Arthur Nelson \\
-%  \\
-%  \\
-%  \\
-%  \\
-%  \\
-%        Submitted in partial fulfillment of the \\
-%        requirements for the degree of \\
-%        Master of Science in Robotics \\
-%        at \\
-%        Carnegie Mellon University \\
-%        of Physics \\
-%        Pittsburgh, Pennsylvania \\
-%  \\
-%        \\
-%  Advised by Professor Aaaaaaa Baaaaaa
-%  \\
-%  \\
-%}
-\author{
-  \\
-  Erik Arthur Nelson \\
-  \today \\
-  \\
-  \includegraphics[width=0.5\textwidth]{cmu_seal.jpeg} \\
-  \\
-  The Robotics Institute \\
-  School of Computer Science \\
-  Carnegie Mellon University \\
-  Pittsburgh, Pennsylvania \\
-  \\
-  {\bf Thesis Committee:} \\
-  Nathan Michael, {\it Chair} \\
-  Two \\
-  Three \\
-  \\
-  \textit{Submitted in partial fulfillment of the requirements} \\
-  \textit{for the degree of Master of Science in Robotics.}
-}
+\input{support/definitions}
+%
 
-\title{\bf{
-Title Goes Here
-}}
-
-\date{}
-
-%
-% ====================================================================
-%     Input your definition in file definitions.tex here.
-%     A simple example of the content of such a file is given below.
-% ====================================================================
-%
-%\input{definitions}
-%
-%%%%%%%%%%%%%% Example for content of file definitions.tex %%%%%%%%%%%
-\def\ra    {\rightarrow}
-\def\ul    {\underline}
-\def\mevcc {\ifmmode {\mathrm MeV}/c^2 \else MeV$/c^2$\fi}
-\def\BsJpsiPhi {\ensuremath{\Bs \ra J/\psi\,\phi}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 \begin{document}
-
 \thispagestyle{empty}
-
 \maketitle
 
 % ====================================================================
-%     Generates one blank page before the 'Abstract'
+%     Single blank page before the 'Abstract'
 % ====================================================================
 
 \thispagestyle{empty} \cleardoublepage

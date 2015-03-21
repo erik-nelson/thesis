@@ -3,5 +3,7 @@
 *.log
 *.lot
 *.toc
+*.pdfsync
+*.*~
 old/
 test/
