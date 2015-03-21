@@ -12,4 +12,10 @@ fi
 # Add all changes and commit with the input message
 git add -A
 git commit -m "$1"
-git push -u origin master
+
+git push -u origin
+#if [ "$#" -ne 2 ]; then
+#  git push -u origin master
+#else
+#  git push -u origin $2
+#fi
