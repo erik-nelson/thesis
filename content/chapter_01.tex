@@ -1,11 +1,142 @@
 \chapter{Introduction}
 
+Robots are emerging from controlled factories and
+laboratories into our homes, workplaces, roads, and public airspaces.
+Alongside their transition into these unstructured and transient environments
+comes their need to be able to explore, characterize, and catalog their surroundings.
+Mobile robot autonomy is generally accomplished by referring to a map - a 2D or 3D
+probabilistic representation of the locations of obstacles in the workspace.
+With access to a map, robots can localize to determine their position, plan collision-free
+trajectories to goals, locate objects for interaction, and make decisions by
+reasoning about the geometry and dynamics of the world. Given that a robot's map
+is of critical importance for most autonomy tasks, robots that find
+themselves initialized without a priori access to a map should be capable of
+autonomously, efficiently, and intelligently creating one.
+
+The exercise of choosing and executing actions that lead a robot to learn more about its own
+map is known as \textit{active perception} or \textit{exploration}, and
+is the central topic of this thesis. Active perception has previously been studied with a
+multitude of sensor models, environment representations, and robot dynamics
+models. The active perception task itself can be split into two
+components~\cite{shen20113d}:
+
+\begin{enumerate}
+  \item Identifying regions in the environment that, when visited, will
+    spatially extend or reduce uncertainty in the current map
+  \item Autonomously navigating to the aforementioned regions, while
+    simultaneously localizing to the map and updating it with acquired sensor
+    measurements
+\end{enumerate}
+
+A motivating example is depicted in Fig.~\ref{fig:motivation}, where a household
+service robot is initialized in an unknown environment. Prior to accomplishing
+tasks that a human might ask it to perform, the robot must learn its
+surroundings and build a map of the house. Ideally this phase of
+initialization would be fast, as it is a prerequisite to the main functionality
+of the robot, and also might be required when furniture is moved or
+household objects are displaced. Where should the robot travel to observe the
+most of the environment in the shortest amount of time? Virtually any autonomous robot
+operating in an uncontrolled environment will require a map-building
+initialization phase, motivating algorithms for high-speed and intelligent
+exploration.
+
+This thesis introduces an assortment of information-theoretic optimizations that
+increase the efficiency of active perception when using a beam-based sensor
+model (e.g. LIDAR, time-of-flight cameras, structured light sensors) and
+an occupancy grid map~\cite{elfes1989using}. Applying these optimizations during exploration allows a
+robot to consider a significantly larger number of future locations to move
+towards in its partially observed environment, regardless of the planning
+strategy used. Additionally, this thesis presents a method for analyzing the
+complexity of the local environment and adapting the robot's map resolution,
+planning frequency, movement speed, and exploration behaviors accordingly. By
+adapting these parameters online, an exploring robot is able to
+
+%allow a robot to analyze the complexity and structure of its local surroundings
+%Novel to this thesis is an assortment of information-theoretic
+%optimizations that allow a robot to analyze the complexity of its surroundings
+%online and change its map representation to increase both the speed and
+%efficiency of exploration.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{example-image.png}
+  \caption{A household service robot awakes in an unknown environment. Prior to
+  accomplishing its main functionalities, it will require a map of its surroundings.
+What sequence of actions should it take to minimize the amount of time spent
+exploring? \label{fig:motivation}}
+\end{figure}
+
+\section{Previous Work}
+
+Prior approaches to mobile robot active perception fall into two
+broad categories: \textit{geometric} approaches that reason about the locations and
+presence of obstacles and
+free space in the robot's map\todo{~\cite{}},
+and more recently, \textit{information-theoretic} approaches that treat the map as
+a multivariate random variable and choose actions that will maximally reduce
+its uncertainty\todo{~\cite{}}.
+Both categories of approaches solve the first
+enumerated item in the above list, and assume that a planner and Simultaneous
+Localization and Mapping (SLAM) framework are available to accomplish the second
+item.
+
+Many successful geometric exploration approaches build upon the seminal work of
+Yamauchi~\cite{yamauchi1997frontier}, guiding the robot to \textit{frontiers} - regions on the boundary
+between free and unexplored space in the map (Fig.~\ref{fig:frontiers}).
+As multiple frontiers often exist simultaneously in a partially explored map, a
+variety of heuristics and spatial metrics can be used to decide which frontier to
+travel towards~\cite{lavalle2006planning}. For example, an agent may decide to
+visit the frontier whose path through the configuration space from the robot's current
+position has minimum length, or requires minimal time or energy input to
+traverse. Similarly, an agent may decide to only plan paths to locations
+from which frontiers can be observed by its onboard sensors.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{example-image}
+    \caption{\todo{A geometric approach is used to identify frontiers,
+    or the intersections between free and occupied cells in the robot's map.}\label{fig:frontiers}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{example-image}
+    \caption{\todo{Information-theoretic exploration}\label{fig:info-theoretic}}
+  \end{subfigure}
+  \caption{A robot is faced with a decision-making problem. Will the red or
+    green path lead to a higher future reward? \label{fig:exploration_strategies}}
+\end{figure}
+
+Other geometric exploration algorithms include
+
+While effective in 2D environments, geometric exploration algorithms have
+several restrictive qualities. First, the na\"{i}ve extension of frontier exploration
+from 2D to 3D poses a non-trivial challenge~\cite{shen20113d}; as the
+dimensionality of the workspace increases, frontiers are more frequently identified in
+locations that do not truly represent boundaries between free and occupied
+space.
+
+
 \section{Thesis Problem}
 
-\section{Summary of Approach}
+% Thesis Problem
+\begin{center} \fbox{
+  \parbox{0.9\linewidth}
+  { {\bf Thesis Problem:} Solutions to the mobile robot active perception task
+  that involve optimization of information-theoretic cost functions are too
+  computationally expensive for high-speed exploration in complex environments.}
+} \end{center}
 
-\subsection{Thesis Statement}
+% Thesis Statement
+%\begin{center} \fbox{
+%  \parbox{0.9\linewidth}
+%  { {\bf Thesis Statement:} Occupancy grid maps can be compressed in such a way
+%  that information metrics computed between the map and range sensor
+%measurements are minimally affected,}
+%} \end{center}
 
-\subsection{Metrics}
+
 
 \section{Thesis Outline}
