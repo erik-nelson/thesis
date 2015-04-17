@@ -1,17 +1,61 @@
 \chapter{Foundations}
+\label{chapter2}
+
+This thesis draws upon research both within and outside of the subject of robotics.
+Sections~\ref{sec:occ_grid_mapping} - \ref{sec:receding_horizon} review
+foundational and relevant topics within robotics including occupancy grid mapping,
+active perception as an optimization, and several planning strategies that are suitable for the
+exploration task. Chapters~\ref{chapter3} - \ref{chapter5} will borrow heavily from
+information theory, rate distortion theory, and signal processing. In these
+domains one is frequently concerned with evaluating the effect one random
+variable (e.g. a sensor measurement) has on
+another (e.g. a map) or with compressing a random variable to a reduced
+representation in such a way that the compressed form preserves the structure of the
+uncompressed form.
+Section~\ref{sec:information_theory} reviews concepts from
+these domains that will be used when developing theories for map
+compression, map resolution selection, and adapting robot behaviors to the
+environment resolution.
 
 \section{Occupancy Grid Mapping}
+\label{sec:occ_grid_mapping}
+
+We represent the map as an OG, which decomposes the robot's workspace into a discrete set of cells. The presence or absence of obstacles within these cells is modeled as a $K$-tuple binary random variable, $m = \{m_{i}\}_{i=1}^{K}$, with support set $\{\texttt{EMP}, \texttt{OCC}\}$. The probability that an individual cell is occupied is given by $p\left(m_{i} \ \vert \ x_{1:t}, z_{1:t}\right)$, where $x_{1:t}$ denotes the history of states of the vehicle, and $z_{1:t}$ denotes the history of range observations accumulated by the vehicle. The OG representation treats cells as independent from one another, allowing one to express the probability of a specific map as the product of individual cell occupancy values: $p\left(m \ \vert \ x_{1:t}, z_{1:t}\right) = \prod_{i} p\left(m_{i} \ \vert \ x_{1:t}, z_{1:t}\right)$. For notational simplicity we write the map conditioned on random variables $x_{1:t}$ and $z_{1:t}$ as $p\left(m\right) \equiv p\left(m \ \vert \ x_{1:t}, z_{1:t}\right)$, and the probability of occupancy for a grid cell $i$ as $o_{i}\equiv p\left(m_{i}=\texttt{OCC}\ \vert \ x_{1:t}, z_{1:t}\right)$. Unobserved grid cells are assigned a uniform prior such that $\{o_{i} = 1 - o_{i} = 0.5\}_{i=1}^{K}$. To allow cell occupancy values to be updated with new measurements, we represent the occupancy status of grid cell $m_i$ at time $t$ with the log-odds expression
+%
+\eq{
+  l_t
+  &\equiv
+  \log
+  \frac{o_{i}}
+  {1 - o_{i}}.
+}
+
+When a new measurement $z_t$ is obtained, cell occupancy values may be updated with
+%
+\eq{
+  l_t &=
+  l_{t-1}
+  +
+  L\left(m_{i}\, \vert z_{t}\right),
+}
+
+where the term $L\left(m_{i}\,  \vert z_{t}\right)$ represents the robot's inverse sensor model~\cite{thrun2005probabilistic}.
+
+
+
+\section{Active Perception}
+\label{sec:active_perception}
+
+\section{Receding Horizon Planning}
+\label{sec:receding_horizon}
 
 \section{Information Theory}
+\label{sec:information_theory}
 
 \subsection{Entropies, Divergences, and Mutual Information}
 
 \subsection{R\'{e}nyi's $\alpha$-entropy}
 
 \subsection{Cauchy-Schwarz Quadratic Mutual Information}
-
-\section{Active Perception}
-
-\section{Receding Horizon Planning}
 
 \section{Summary of Foundations}

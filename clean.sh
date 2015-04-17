@@ -3,6 +3,7 @@
 rm *.aux > /dev/null 2>&1
 rm *.pdfsync > /dev/null 2>&1
 #rm *.bbl > /dev/null 2>&1
+rm *.dvi > /dev/null 2>&1
 rm *.blg > /dev/null 2>&1
 rm *.toc > /dev/null 2>&1
 rm *.lof > /dev/null 2>&1

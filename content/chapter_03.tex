@@ -1,11 +1,183 @@
 %\chapter{Adapting Environment Models for Compactness}
-\chapter{Environment Model Compression}
+\chapter{Information-Theoretic Map Compression}
+\label{chapter3}
 
 \section{The Principle of Relevant Information}
 
+We formulate the OG compression problem as an information-theoretic optimization using the Principle of Relevant Information (PRI). PRI is a technique for learning a reduced representation $\hat{X}$ of a random variable $X$ such that both the entropy of $\hat{X}$ and the divergence of $\hat{X}$ with respect to the original data are minimized.
+%
+\eq{
+    J(\hat{X})
+    &=
+    \min_{\hat{X}}
+    (
+    \text{H}_{\alpha}(\hat{X})
+    +
+    \lambda
+    \text{D}_{\alpha}(X \vert \vert \hat{X})).
+    \label{eq:pri_general}
+}
+
+The two terms of the PRI cost function are R\'{e}nyi's $\alpha$-entropy, which describes the amount of uncertainty in its argument, and R\'{e}nyi's $\alpha$-divergence, which is a distance measure describing distortion between $p(x)$ and $p(\hat{x})$. These terms simplify to the more common Shannon entropy and Kullback-Leibler divergence for $\alpha = 1$. The variational parameter $\lambda$ controls the amount of distortion in the compressed data. To complement the Information Bottleneck optimization described later (Sec.~\ref{subsec:ib_optimization}), we choose to minimize the $\text{H}_{2}$ entropy and Cauchy-Schwarz divergence. For discrete random variables $X$ and $\hat{X}$,
+%
+\eq{
+    \text{H}_{2}(\hat{X}) &= -\log \sum_{i} p^{2}(\hat{x}_{i}),
+}
+\eq{
+    \text{D}_{\text{CS}}(X \vert \vert \hat{X}) =
+    \log
+    \frac{
+    \sum_{i} p^{2}(x_{i}) \sum_{i} p^{2}(\hat{x_{i}})
+    }
+    {
+    \left(\sum_{i} p(x_{i})p(\hat{x_{i}})\right)^{2}
+    }.
+    \label{eq:cs_divergence}
+}
+
+The cost function in~\eqref{eq:pri_general} is then:
+%
+\eq{
+    (1-\lambda)\, \text{H}_{2}(\hat{X})-\lambda 2 \log \sum_{i} p(x_{i})p(\hat{x_{i}}) - \lambda \text{H}_{2}(X).
+    \label{eq:cost_func}
+}
+
+The third term has no influence on the minimization over $\hat{X}$, and can be ignored. We choose to give equal weight to the entropy and divergence, and optimize for $\lambda=1$. Noting that logs and quadratic functions increase monotonically for positive arguments, and noting that the summand in the second term of~\eqref{eq:cost_func} must be positive, the optimization can be simplified to:
+%
+\eq{
+    J(\hat{X})
+    &=
+    \max_{\hat{X}}
+    \sum_{i} p(x_{i}) p(\hat{x}_{i}).
+    \label{eq:pri_specific}
+}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[height=5.3cm]{map_compression.pdf}
+        \caption{OG compression sequence \label{fig:pri_compression1}}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[height=5.3cm]{compression.pdf}
+        \caption{Probability space of the top two grid cells in $m^{R}$ in~\ref{fig:pri_compression1} \label{fig:pri_compression2}}
+    \end{subfigure}
+    \caption{For each square (cubic in 3D) region $m^{R}$ in the uncompressed OG $m^{K}$, the PRI optimization finds a random variable $\tilde{m}^{R}$ that minimizes~\eqref{eq:pri_general} and is constrained to have uniform occupancy probability $\tilde{o}^{R} = (\tilde{o}^{1}, \dots, \tilde{o}^{1})$. \label{fig:pri_compression}}
+\end{figure}
+
+
 \section{Framing Occupancy Grid Compression as an Optimization}
 
+To apply the PRI optimization to OG compression, let $X$ be an OG $m^{K}$ with $K$ cells. The problem must be constrained in three ways. First, because OGs encode a 2D or 3D geometry, $\hat{X}$ must represent $X$ well in local regions. Compression over the map can therefore be accomplished by performing compression in many small independent square (cubic in 3D) regions $m^{R} \subseteq m^{K}$, assuming individual grid cell occupancies are independent.  Second, we consider only the set of compressions that reduce OG cell count in each dimension by factors of two. Therefore an OG $m^{K}$ will be compressed to an OG $m^{2^{-dn}K}$, where $d$ is the OG dimension and $n$ is the number of $2\times$ compressions in each dimension. The set of compressions with this property can be expressed as:
+%
+\eq{
+    C_{n}(m^{K}) \equiv m^{2^{-dn}K}, \quad n \in \mbb{N}_{0},
+}
+
+where superscripts denote cell count and where a compression of $n=0$ gives the original OG: $C_{0}(m^{K}) = m^{K}$. Both $m^{K}$ and $C_{n}(m^{K})$ will have the same metric dimensions, but will have different cell edge lengths and cell counts when $n \ge 1$. Finally, we enforce that $\hat{X}$ must also be an OG. Since $\text{D}_{\text{CS}}(X\vert \vert \hat{X})$ may only be computed for two random variables with the same support set, we use the PRI to find a random variable $\tilde{m}^{R}$ that has uniform occupancy probabilities, and then reduce its dimension to one, yielding a single grid cell $\tilde{m}^{1}$ (Fig.~\ref{fig:pri_compression}). Combining the single-cell $\tilde{m}^{1}$ variables from independent regions yields the compressed OG $C_{n}(m^{K})$.
+
+Rather than directly maximizing~\eqref{eq:pri_specific} over $\tilde{m}^{R}$, we are interested in finding the distribution $p(\tilde{m}^{R})$ corresponding to the maximum. $p(\tilde{m}^{R})$ is a Bernoulli distribution, and is completely determined by its single parameter $\tilde{o}^{1} = p(\tilde{m}^{R} = \{\texttt{OCC},\dots,\texttt{OCC}\}) = 1 - p(\tilde{m}^{R} = \{\texttt{EMP},\dots,\texttt{EMP}\})$. Substituting the described variables into~\eqref{eq:pri_specific},
+%
+\eq{
+    \tilde{o}^{1}_{*} &=
+    \argmax_{\tilde{o}^{1}}
+    \sum_{M^{R}}
+    p\left(m^{R} = M^{R}\right)p\left(\tilde{m}^{R}=M^{R}\right).
+    \label{eq:pri_specific2}
+}
+
 \section{Solving the Optimization}
+
+\begin{table*}[t]
+    \caption{Contingency table for a compression from the OG region $m^{R}$ to $\tilde{m}^{R}$. \texttt{O} and \texttt{E} stand for \texttt{OCC} and \texttt{EMP}. \label{tab:contingency}}
+    \centering
+    \scalebox{0.9}
+    {
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{| c | c | c | c | c | c | c | c |}
+        \cline{3-7}
+        \multicolumn{2}{c|}{}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c}{$\tilde{m}^{R}$}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c|}{}
+        & \multicolumn{1}{c}{}
+        \\ \cline{3-8}
+        \multicolumn{2}{c|}{}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{E}} & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{O}} & $\dots$ & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{E}} & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{O}} & Total \\ \cline{1-4}\cline{6-8}
+        \multirow{5}{*}{$m^{R}$}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{E}} & $w_{2}\cdot(1-\tilde{o}^{1}) \cdot \prod_{i=1}^{R}(1-o_{i}^{R})$ & $0$ & $\dots$ & $0$ & $w_{3}\cdot \tilde{o}^{1}\cdot \prod_{i=1}^{R}(1-o_{i}^{R})$ & $\prod_{i=1}^{R}(1-o_{i}^{R})$\\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{O}} & $w_{1}\cdot(1-\tilde{o}^{1})\cdot o_{1}^{R}\cdot \prod_{i=2}^{R}(1-o_{i}^{R})$ & $0$ & $\dots$ & $0$ & $w_{4}\cdot\tilde{o}^{1}\cdot o_{1}\cdot \prod_{i=2}^{R}(1-o_{i}^{R})$ & $o_{1}\cdot \prod_{i=2}^{R}(1-o_{i}^{R})$\\ \cline{2-4}\cline{6-8}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\ddots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c|}{$\vdots$} \\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{E}} & $ w_{1} \cdot (1-\tilde{o}^{1})\cdot (1-o_{1}^{R}) \cdot \prod_{i=2}^{R} o_{i}^{R}$ & $0$ & $\dots$ & $0$ & $w_{4}\cdot \tilde{o}^{1}\cdot (1-o_{1}^{R}) \cdot \prod_{i=2}^{R} o_{i}^{R}$ & $(1-o_{1}^{R}) \cdot \prod_{i=2}^{R} o_{i}^{R}$\\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{O}} & $w_{1}\cdot(1-\tilde{o}^{1})\cdot \prod_{i=1}^{R}o_{i}^{R}$ & $0$ & $\dots$ & $0$ & $w_{4}\cdot\tilde{o}^{1}\cdot \prod_{i=1}^{R}o_{i}^{R}$ & $\prod_{i=1}^{R}o_{i}^{R}$ \\ \cline{1-4}\cline{6-8}
+        \multicolumn{1}{c|}{}
+        & Total & $1-\tilde{o}^{1}$ & $0$ & $\dots$ & $0$ & $\tilde{o}^{1}$ & 1 \\ \cline{2-8}
+    \end{tabular}
+    }
+\end{table*}
+
+Table~\ref{tab:contingency} shows a contingency table for a compression from the OG region $m^{R}$ to $\tilde{m}^{R}$. The middle columns of the contingency table have zero probability, since the $\tilde{m}^{R}$ must have a uniform cell probability to be able to reduce it to $\tilde{m}^{1}$ (i.e. $\tilde{o}^{R}_{i} = \tilde{o}^{R}_{j}=\tilde{o}^{1}\, \forall i,j \in 1,\dots,R$). In this section we are only interested in the marginal distributions (bottom-most row and right-most column), which are needed to determine~\eqref{eq:pri_specific2}. Substituting these,
+%
+\eq{
+    \tilde{o}_{*}^{1}
+    =
+    &=
+    \argmax_{\tilde{o}^{1}}
+    \left(
+    (1-\tilde{o}^{1}) \prod_{i=1}^{R}(1-o_{i}^{R})
+    +\tilde{o}^{1} \prod_{i=1}^{R}o_{i}^{R}
+    \right),
+}
+
+which is satisfied for
+%
+\eq{
+    \tilde{o}_{*}^{1}
+    &=
+    \begin{cases}
+    0           &\text{if} \ \prod_{i=1}^{R}\frac{o_{i}^{R}}{1-o_{i}^{R}} < 1 \\
+    1           &\text{if} \ \prod_{i=1}^{R}\frac{o_{i}^{R}}{1-o_{i}^{R}} > 1 \\
+    \frac{1}{2} &\text{otherwise}
+    \end{cases},
+    \label{eq:compression_cases}
+}
+
+where the last case applies in the limit as $\lambda \rightarrow 1^{+}$.
+
+The PRI solution gives us a simple compression rule: if the product of cell occupancy likelihoods in a given region is greater than $1$, set the occupancy of the cell corresponding to that region in the compressed OG to $1$. Likewise set the value to $0$ if the product of likelihoods is less than $1$, and to $0.5$ if the product of likelihoods is $1$. Pragmatically, it is more reasonable to use the map's occupancy and free thresholds rather than $1.0$ and $0.0$. This variation corresponds to optimizing for $\lambda$ slightly greater than one, favoring minimal distortion to minimal entropy. Additionally, one may introduce a heuristic to increase the fraction of occupied cells that are preserved through compression by multiplying the right-hand sides of the inequalities in~\eqref{eq:compression_cases} by $\eta \in (0, 1)$. As $\eta$ decreases, occupied cells will be preserved through compression with higher frequency. For any application involving raycasting, it is especially important to include this heuristic, as vanishing occupied cells lead to poor ray termination.
+
+Denoting $\pi^{R} \equiv \prod_{i=1}^{R}\frac{o_{i}^{R}}{1-o_{i}^{R}}$ and applying these modifications gives the $\sqrt{R}\times\sqrt{R}\rightarrow 1\times1$ (or $\sqrt[3]{R}\times\sqrt[3]{R}\times\sqrt[3]{R}\rightarrow 1\times1\times1$ in 3D) compression rule for each region $m^{R}$:
+%
+\eq{
+    \tilde{o}_{*}^{1}
+    &=
+    \begin{cases}
+    \frac{1}{2}             &\text{if} \ \pi^{R} = \eta \vee \pi^{R} = 1 \\
+    p_{\text{free}}         &\text{if} \ \pi^{R} < \eta \wedge \pi^{R} \ne 1 \\
+    p_{\text{occ}}          &\text{if} \ \pi^{R} > \eta \wedge \pi^{R} \ne 1
+    \end{cases},
+    \label{eq:compression_cases2}
+}
+
+where $p_{\text{occ}}$ and $p_{\text{free}}$ are the thresholds for occupied and free space in the OG implementation, respectively.
 
 \section{Occupancy Grid Pyramids}
 

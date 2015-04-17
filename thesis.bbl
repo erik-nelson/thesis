@@ -1,4 +1,51 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{acar2002sensor}
+Ercan~U Acar and Howie Choset.
+\newblock Sensor-based coverage of unknown environments: Incremental
+  construction of morse decompositions.
+\newblock {\em The International Journal of Robotics Research}, 21(4):345--366,
+  2002.
+
+\bibitem{amigoni2010information}
+Francesco Amigoni and Vincenzo Caglioti.
+\newblock An information-based exploration strategy for environment mapping
+  with mobile robots.
+\newblock {\em Robotics and Autonomous Systems}, 58(5):684--699, 2010.
+
+\bibitem{basilico2008evaluating}
+Nicola Basilico and Francesco Amigoni.
+\newblock On evaluating performance of exploration strategies for autonomous
+  mobile robots.
+\newblock In {\em Proceedings of the performance evaluation and benchmarking
+  for intelligent robots and systems workshop at IEEE/RSJ international
+  conference on intelligent robots and systems}, 2008.
+
+\bibitem{bourgault2002information}
+Frederic Bourgault, Alexei~A Makarenko, Stefan~B Williams, Ben Grocholsky, and
+  Hugh~F Durrant-Whyte.
+\newblock Information based adaptive robotic exploration.
+\newblock In {\em Intelligent Robots and Systems, 2002. IEEE/RSJ International
+  Conference on}, volume~1, pages 540--545. IEEE, 2002.
+
+\bibitem{burgard2000collaborative}
+Wolfram Burgard, Mark Moors, Dieter Fox, Reid Simmons, and Sebastian Thrun.
+\newblock Collaborative multi-robot exploration.
+\newblock In {\em Robotics and Automation, 2000. Proceedings. ICRA'00. IEEE
+  International Conference on}, volume~1, pages 476--481. IEEE, 2000.
+
+\bibitem{chan1993line}
+Kwong-Fai Chan and Tak~Wah Lam.
+\newblock An on-line algorithm for navigating in an unknown environment.
+\newblock {\em International Journal of Computational Geometry \&
+  Applications}, 3(03):227--244, 1993.
+
+\bibitem{charrow2015icra}
+Ben Charrow, Sikang Liu, Vijay Kumar, and Nathan Michael.
+\newblock Information-theoretic mapping using cauchy-schwarz quadratic mutual
+  information.
+\newblock In {\em Robotics and Automation, 2015. Proceedings., 2015 IEEE
+  International Conference on}. IEEE, 2015.
 
 \bibitem{elfes1989using}
 Alberto Elfes.
@@ -6,16 +53,91 @@ Alberto Elfes.
   and navigation}.
 \newblock PhD thesis, Carnegie Mellon University, 1989.
 
+\bibitem{feder1999adaptive}
+Hans Jacob~S Feder, John~J Leonard, and Christopher~M Smith.
+\newblock Adaptive mobile robot navigation and mapping.
+\newblock {\em The International Journal of Robotics Research}, 18(7):650--668,
+  1999.
+
+\bibitem{gonzalez2002navigation}
+Hector~H Gonzalez-Banos and Jean-Claude Latombe.
+\newblock Navigation strategies for exploring indoor environments.
+\newblock {\em The International Journal of Robotics Research},
+  21(10-11):829--848, 2002.
+
+\bibitem{holz2011comparative}
+Dirk Holz, Nicola Basilico, Francesco Amigoni, and Sven Behnke.
+\newblock A comparative evaluation of exploration strategies and heuristics to
+  improve them.
+\newblock In {\em ECMR}, pages 25--30, 2011.
+
+\bibitem{julian2013mutual}
+Brian~J Julian, Sertac Karaman, and Daniela Rus.
+\newblock On mutual information-based control of range sensing robots for
+  mapping applications.
+\newblock In {\em Intelligent Robots and Systems (IROS), 2013 IEEE/RSJ
+  International Conference on}, pages 5156--5163. IEEE, 2013.
+
+\bibitem{julian2013mutualthesis}
+Brian~John Julian.
+\newblock {\em Mutual information-based gradient-ascent control for distributed
+  robotics}.
+\newblock PhD thesis, Massachusetts Institute of Technology, 2013.
+
+\bibitem{kollar2008efficient}
+Thomas Kollar and Nicholas Roy.
+\newblock Efficient optimization of information-theoretic exploration in slam.
+\newblock In {\em AAAI}, volume~8, pages 1369--1375, 2008.
+
+\bibitem{kollar2008trajectory}
+Thomas Kollar and Nicholas Roy.
+\newblock Trajectory optimization using reinforcement learning for map
+  exploration.
+\newblock {\em The International Journal of Robotics Research}, 27(2):175--196,
+  2008.
+
 \bibitem{lavalle2006planning}
 Steven~M LaValle.
 \newblock {\em Planning algorithms}.
 \newblock Cambridge university press, 2006.
+
+\bibitem{nelson2015iros}
+Erik Nelson and Nathan Michael.
+\newblock Optimal information-theoretic occupancy grid compression for
+  high-speed information-based exploration.
+\newblock In {\em IEEE/RSJ International Conference on Intelligent Robots and
+  Systems, 2015. (IROS 2015).} IEEE, 2015.
 
 \bibitem{shen20113d}
 Shaojie Shen, Nathan Michael, and Vijay Kumar.
 \newblock Autonomous indoor 3d exploration with a micro-aerial vehicle.
 \newblock In {\em Robotics and Automation (ICRA), 2012 IEEE International
   Conference on}, pages 9--15. IEEE, 2012.
+
+\bibitem{sim2004online}
+Robert Sim, Gregory Dudek, and Nicholas Roy.
+\newblock Online control policy optimization for minimizing map uncertainty
+  during exploration.
+\newblock In {\em Robotics and Autkollar2008trajectoryomation, 2004.
+  Proceedings. ICRA'04. 2004 IEEE International Conference on}, volume~2, pages
+  1758--1763. IEEE, 2004.
+
+\bibitem{taylor1993exploration}
+Camillo~J Taylor and D~Kriegman.
+\newblock Exploration strategies for mobile robots.
+\newblock In {\em Robotics and Automation, 1993. Proceedings., 1993 IEEE
+  International Conference on}, pages 248--253. IEEE, 1993.
+
+\bibitem{thrun2005probabilistic}
+Sebastian Thrun, Wolfram Burgard, and Dieter Fox.
+\newblock {\em Probabilistic robotics}.
+\newblock MIT press, 2005.
+
+\bibitem{wang2007view}
+Pengpeng Wang.
+\newblock {\em View planning with combined view and travel cost}.
+\newblock PhD thesis, School of Engineering Science-Simon Fraser University,
+  2007.
 
 \bibitem{yamauchi1997frontier}
 Brian Yamauchi.
