@@ -29,15 +29,6 @@ components~\cite{shen20113d}:
     measurements
 \end{enumerate}
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{example-image.png}
-  \caption{A household service robot awakes in an unknown environment. Prior to
-  accomplishing its main functionalities, it will require a map of its surroundings.
-What sequence of actions should it take to minimize the time it spends
-exploring? \label{fig:motivation}}
-\end{figure}
-
 A motivating example is depicted in Fig.~\ref{fig:motivation}, where a household
 service robot is initialized in an unknown environment. Prior to accomplishing
 tasks that a human might ask it to perform, the robot must learn its
@@ -49,6 +40,15 @@ most of the environment in the shortest amount of time? Virtually any autonomous
 operating in an unknown environment will require a map-building
 initialization phase, welcoming strategies that enable high-speed and intelligent
 exploration.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.6\textwidth]{example-image.png}
+  \caption{A household service robot awakes in an unknown environment. Prior to
+  accomplishing its main functionalities, it will require a map of its surroundings.
+What sequence of actions should it take to minimize the time it spends
+exploring? \label{fig:motivation}}
+\end{figure}
 
 This thesis introduces an assortment of information-theoretic optimizations that
 increase the efficiency of active perception when using a beam-based sensor
@@ -92,7 +92,7 @@ position has minimum length, or requires minimal time or energy input to
 traverse. Similarly, an agent may decide to only plan paths to locations
 from which frontiers can be observed by its onboard sensors.
 
-\begin{figure}[hb]
+\begin{figure}[t]
   \centering
   \includegraphics[trim=0cm 0.4cm 0.1cm 0.1cm, clip, width=0.8\textwidth]{frontiers.pdf}
   \caption{A partially explored map with frontiers between free and unknown
@@ -120,7 +120,7 @@ This limitation was first overcome by evaluating the informativeness of simulate
 sensor measurements taken from frontier locations~\cite{gonzalez2002navigation}, and was the
 original motivation for developing a category of information-theoretic exploration strategies.
 
-\begin{figure}
+\begin{figure}[t]
   \centering
   \centering
   \includegraphics[width=0.7\textwidth]{sensor_frontier.pdf}
@@ -153,7 +153,7 @@ behaviors than traditional frontier exploration~\cite{charrow2015icra}.
 The exact same calculation can be used to evaluate information-theoretic objective
 functions in 2D and 3D environments.
 
-\begin{figure}[b]
+\begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.31\textwidth}
         \centering

@@ -13,6 +13,16 @@ Francesco Amigoni and Vincenzo Caglioti.
   with mobile robots.
 \newblock {\em Robotics and Autonomous Systems}, 58(5):684--699, 2010.
 
+\bibitem{bajcsy1988active}
+Ruzena Bajcsy.
+\newblock Active perception.
+\newblock {\em Proceedings of the IEEE}, 76(8):966--1005, 1988.
+
+\bibitem{bajcsy1992active}
+Ruzena Bajcsy and Mario Campos.
+\newblock Active and exploratory perception.
+\newblock {\em CVGIP: Image Understanding}, 56(1):31--40, 1992.
+
 \bibitem{basilico2008evaluating}
 Nicola Basilico and Francesco Amigoni.
 \newblock On evaluating performance of exploration strategies for autonomous
@@ -65,6 +75,12 @@ Hector~H Gonzalez-Banos and Jean-Claude Latombe.
 \newblock {\em The International Journal of Robotics Research},
   21(10-11):829--848, 2002.
 
+\bibitem{hart1968formal}
+Peter~E Hart, Nils~J Nilsson, and Bertram Raphael.
+\newblock A formal basis for the heuristic determination of minimum cost paths.
+\newblock {\em Systems Science and Cybernetics, IEEE Transactions on},
+  4(2):100--107, 1968.
+
 \bibitem{holz2011comparative}
 Dirk Holz, Nicola Basilico, Francesco Amigoni, and Sven Behnke.
 \newblock A comparative evaluation of exploration strategies and heuristics to
@@ -96,6 +112,12 @@ Thomas Kollar and Nicholas Roy.
 \newblock {\em The International Journal of Robotics Research}, 27(2):175--196,
   2008.
 
+\bibitem{lavalle1998rapidly}
+Steven~M LaValle.
+\newblock Rapidly-exploring random trees a Цew tool for path planning.
+\newblock Technical report, Compute Science Department, Iowa State University,
+  1998.
+
 \bibitem{lavalle2006planning}
 Steven~M LaValle.
 \newblock {\em Planning algorithms}.
@@ -107,6 +129,26 @@ Erik Nelson and Nathan Michael.
   high-speed information-based exploration.
 \newblock In {\em IEEE/RSJ International Conference on Intelligent Robots and
   Systems, 2015. (IROS 2015).} IEEE, 2015.
+
+\bibitem{pivtoraiko2005generating}
+Mihail Pivtoraiko and Alonzo Kelly.
+\newblock Generating near minimal spanning control sets for constrained motion
+  planning in discrete state spaces.
+\newblock In {\em IEEE/RSJ International Conference on Intelligent Robots and
+  Systems, 2005. (IROS 2005).}, pages 3231--3237. IEEE, 2005.
+
+\bibitem{pivtoraiko2009differentially}
+Mihail Pivtoraiko, Ross~A Knepper, and Alonzo Kelly.
+\newblock Differentially constrained mobile robot motion planning in state
+  lattices.
+\newblock {\em Journal of Field Robotics}, 26(3):308--333, 2009.
+
+\bibitem{pivtoraiko2013incremental}
+Mihail Pivtoraiko, Daniel Mellinger, and Vijay Kumar.
+\newblock Incremental micro-uav motion replanning for exploring unknown
+  environments.
+\newblock In {\em Robotics and Automation (ICRA), 2013 IEEE International
+  Conference on}, pages 2452--2458. IEEE, 2013.
 
 \bibitem{shen20113d}
 Shaojie Shen, Nathan Michael, and Vijay Kumar.
@@ -132,6 +174,12 @@ Camillo~J Taylor and D~Kriegman.
 Sebastian Thrun, Wolfram Burgard, and Dieter Fox.
 \newblock {\em Probabilistic robotics}.
 \newblock MIT press, 2005.
+
+\bibitem{vallve2014dense}
+Joan Vallv{\'e} and Juan Andrade-Cetto.
+\newblock Dense entropy decrease estimation for mobile robot exploration.
+\newblock In {\em Robotics and Automation (ICRA), 2014 IEEE International
+  Conference on}, pages 6083--6089. IEEE, 2014.
 
 \bibitem{wang2007view}
 Pengpeng Wang.

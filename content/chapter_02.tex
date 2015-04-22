@@ -1,58 +1,331 @@
 \chapter{Foundations}
 \label{chapter2}
 
-This thesis draws upon research both within and outside of the subject of robotics.
-Sections~\ref{sec:occ_grid_mapping} - \ref{sec:receding_horizon} review
-foundational and relevant topics within robotics including occupancy grid mapping,
+This thesis draws upon prior research from the robotics, information theory, and signal
+processing domains to develop its formulations.
+Sections~\ref{sec:occ_grid_mapping} - \ref{sec:action_generation} review relevant topics within
+robotics including occupancy grid mapping,
 active perception as an optimization, and several planning strategies that are suitable for the
-exploration task. Chapters~\ref{chapter3} - \ref{chapter5} will borrow heavily from
-information theory, rate distortion theory, and signal processing. In these
-domains one is frequently concerned with evaluating the effect one random
+exploration task. These foundational topics will be used to develop a theory of
+optimal occupancy grid compression, and methods for guiding a robot to explore
+uncertain areas of its map efficiently. The formulations developed in
+Chapters~\ref{chapter3} - \ref{chapter5} will also
+borrow heavily from information and rate distortion theory. These
+domains are frequently concerned with evaluating the effect one random
 variable (e.g. a sensor measurement) has on
 another (e.g. a map) or with compressing a random variable to a reduced
 representation in such a way that the compressed form preserves the structure of the
 uncompressed form.
 Section~\ref{sec:information_theory} reviews concepts from
-these domains that will be used when developing theories for map
-compression, map resolution selection, and adapting robot behaviors to the
-environment resolution.
+these domains that will be used when developing theories for optimal map resolution selection,
+and for adapting robot exploration behaviors to the resolution with which its environment is
+modeled.
 
 \section{Occupancy Grid Mapping}
 \label{sec:occ_grid_mapping}
 
-We represent the map as an OG, which decomposes the robot's workspace into a discrete set of cells. The presence or absence of obstacles within these cells is modeled as a $K$-tuple binary random variable, $m = \{m_{i}\}_{i=1}^{K}$, with support set $\{\texttt{EMP}, \texttt{OCC}\}$. The probability that an individual cell is occupied is given by $p\left(m_{i} \ \vert \ x_{1:t}, z_{1:t}\right)$, where $x_{1:t}$ denotes the history of states of the vehicle, and $z_{1:t}$ denotes the history of range observations accumulated by the vehicle. The OG representation treats cells as independent from one another, allowing one to express the probability of a specific map as the product of individual cell occupancy values: $p\left(m \ \vert \ x_{1:t}, z_{1:t}\right) = \prod_{i} p\left(m_{i} \ \vert \ x_{1:t}, z_{1:t}\right)$. For notational simplicity we write the map conditioned on random variables $x_{1:t}$ and $z_{1:t}$ as $p\left(m\right) \equiv p\left(m \ \vert \ x_{1:t}, z_{1:t}\right)$, and the probability of occupancy for a grid cell $i$ as $o_{i}\equiv p\left(m_{i}=\texttt{OCC}\ \vert \ x_{1:t}, z_{1:t}\right)$. Unobserved grid cells are assigned a uniform prior such that $\{o_{i} = 1 - o_{i} = 0.5\}_{i=1}^{K}$. To allow cell occupancy values to be updated with new measurements, we represent the occupancy status of grid cell $m_i$ at time $t$ with the log-odds expression
+Occupancy grids (OGs) are a common and useful proabilistic map model for representing and
+reasoning about an unknown environment. The remainder of this
+thesis assumes that the robot's environment is represented as an OG.
+Figures~\ref{fig:frontiers},~\ref{fig:sensor_frontier} and~\ref{fig:og} depict occupancy grids,
+where black cells represent areas of the environment occupied by an obstacle, white cells
+represent areas that do not contain obstacles, and grey cells represent
+locations with unknown occupancy status.
+
+OGs decompose the robot's workspace into a discrete set of 2D or 3D cells with a
+specified resolution. The presence or absence of obstacles within these cells is modeled
+as a $K$-tuple binary random variable, $\mbf{m} = \{m_{i}\}_{i=1}^{K}$, with support set
+$\{\texttt{EMP}, \texttt{OCC}\}$. The probability that an individual cell is occupied is
+given by $p\left(m_{i} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right)$, where $\mbf{x}_{1:t}$ denotes the
+robot's history of states, and $\mbf{z}_{1:t}$ denotes the history of range observations
+accumulated by the robot. The OG representation treats cells as independent from one another,
+allowing one to express the probability of a specific map as the product of individual
+cell occupancy values:
 %
 \eq{
-  l_t
+  p\left(\mbf{m} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right)
+  &=
+  \prod_{i} p\left(m_{i} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right).
+}
+%
+For notational simplicity, the map conditioned on random variables
+$\mbf{x}_{1:t}$ and $\mbf{z}_{1:t}$ will henceforth be written as $p\left(\mbf{m}\right)
+\equiv p\left(\mbf{m} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right)$, and the probability of occupancy
+for a grid cell $i$ as $o_{i}\equiv p\left(m_{i}=\texttt{OCC}\ \vert \
+\mbf{x}_{1:t}, \mbf{z}_{1:t}\right)$.
+Unobserved grid cells are assigned a uniform prior such that
+$\{o_{i} = 1 - o_{i} = 0.5\}_{i=1}^{K}$. This implies that the robot is
+initially unaware of its surroundings prior to accumulating sensor measurements.
+To prevent numerical precision issues, the
+occupancy status of a grid cell $m_i$ is represented by the log-odds ratio
+%
+\eq{
+  l
   &\equiv
   \log
   \frac{o_{i}}
   {1 - o_{i}}.
 }
-
-When a new measurement $z_t$ is obtained, cell occupancy values may be updated with
+%
+The log-odds ratio maps from occupancy probabilities existing on $[0, 1]$ to
+$\mbb{R}$, which is more suitable for floating-point arithmetic. In addition,
+the log-odds ratio makes updates to a cell occupancy probability additive rather
+than multaplicative. When a new measurement $\mbf{z}_t$ is obtained, cell occupancy values
+may be updated with
 %
 \eq{
-  l_t &=
-  l_{t-1}
+  l &\gets
+  l
   +
-  L\left(m_{i}\, \vert z_{t}\right),
+  L\left(m_{i}\, \vert \mbf{z}_{t}\right),
 }
-
-where the term $L\left(m_{i}\,  \vert z_{t}\right)$ represents the robot's inverse sensor model~\cite{thrun2005probabilistic}.
-
-
+%
+where the term $L\left(m_{i}\,  \vert \mbf{z}_{t}\right)$ represents the robot's inverse sensor model~\cite{thrun2005probabilistic}.
 
 \section{Active Perception}
 \label{sec:active_perception}
 
-\section{Receding Horizon Planning}
-\label{sec:receding_horizon}
+Active perception is the idea that a machine should continually guide itself to states in
+which it is able to acquire better sensor measurements~\cite{bajcsy1988active,bajcsy1992active}.
+Active perception draws inspiration from biological sensors that adapt in
+response to external stimuli. The human eye, for example, has muscles that
+constrict the pupil in response to bright light (adaptation), and others that distort the
+curvature of its lens to focus on nearby or far-away objects (accomodation).
+Adaptation and accomodation allow humans to see light varying nine orders of
+magnitude in brightness, and focus on objects an infinite distance away.
+Similarly, a man-made sensor such as a camera should not passively collect and report incoming photons,
+but should adapt its aperture, CMOS gains, and shutter speed based on the
+properties of the incoming light.
+
+To extend this idea to mobile robotics, one must consider the robot system itself as
+a sensor that is able to move and actuate for the purpose of collecting better
+sensor measurements. From this perspective, the robot's task is to choose and
+execute \textit{actions} that optimize the quality of its sensor measurements.
+An action can be defined as a sequence of configurations
+$\mbf{x}_{\mbf{\tau}}\equiv \left(\mbf{x}_{t+1}, \dots, \mbf{x}_{t+T}\right)$
+that the robot will achieve
+over a future time interval $\mbf{\tau}\equiv (t+1,\dots,t+T)$. From configurations
+$\mbf{x}_{\mbf{\tau}}$ the robot will acquire future sensor measurements
+$\mbf{z}_{\mbf{\tau}} \equiv
+\left(\mbf{z}_{t+1}(\mbf{x}_{t+1}), \dots, \mbf{z}_{t+T}(\mbf{x}_{t+T})\right)$. This thesis is
+concerned primarily with ground robots constrained to $SE(2)$, and will
+therefore use $\mbf{x}_{i}$ to refer to a pose in 2D space: $\mbf{x}_{i}\equiv
+\left(x_{i}, y_{i}, \theta_{i}\right)^{T}$.
+
+In the context of exploring an unknown environment, the active perception problem can
+be framed as an optimization over possible future actions that the robot can take:
+%
+\eq
+{
+  \mbf{x}_{\mbf{\tau}}^{*}
+  &=
+  \argmax_{\mbf{x}_{\mbf{\tau}} \in \mc{X}}
+  \ \mc{J}\left(\mbf{m}, \mbf{z}_{\mbf{\tau}}(\mbf{x}_{\mbf{\tau}})\right),
+  \label{eq:active_perception}
+}
+%
+where $\mc{J}\left(\mbf{m}, \mbf{z}_{\mbf{\tau}}(\mbf{x}_{\mbf{\tau}})\right)$ is a reward
+function expressing the new information learned by sequentially moving the robot
+to configurations $\mbf{x}_{\mbf{\tau}}$, collecting sensor measurements
+$\mbf{z}_{\mbf{\tau}}$, and updating the map $\mbf{m}$. $\mc{X}$ is the set of all collision-free
+and dynamically feasible actions that the robot can take. In addition to
+evaluating the pure information content of $\mbf{z}_{\mbf{\tau}}$, $\mc{J}$ commonly
+incorporates the length of time or energy expenditure required to carry out the
+action $\mbf{x}_{\mbf{\tau}}$.
+
+Unfortunately, the active perception optimizaton faces the \textit{curse of dimensionality};
+the size of $\mc{X}$ grows exponentially with the length of the time horizon $\tau$.
+As $\tau$ increases in size, it quickly becomes infeasible to evaluate $\mc{J}$ over all
+possible actions in $\mc{X}$. This inefficiency motivates generating a
+fixed-size set candidate actions that are likely to be informative prior to optimizing~\eqref{eq:active_perception}.
+
+\section{Action Generation}
+\label{sec:action_generation}
+
+The primary concern of action generation is to suggest a fixed-size set of feasible actions
+$\mc{X}$ that are likely to be informative. A suitable choice of $\mc{J}$ can be
+evaluated on these actions to choose an optimal exploration action
+using~\eqref{eq:active_perception}. Several
+action generation options exist.
+
+\subsection{Frontier Seeding}
+\label{subsec:frontier_seeding}
+
+Recent works by Charrow et al.~\cite{charrow2015icra} and Vallv\'{e} et
+al.~\cite{vallve2014dense} suggest seeding
+information-theoretic exploration by identifying frontiers and then evaluating
+a reward function from frontier locations. Because frontier
+identification is efficient, this two-pass approach is useful for locating
+potentially informative locations prior to performing the comparatively more
+expensive reward evaluation step. This strategy has the added benefit that frontiers are computed
+globally across the robot's map, guaranteeing that the robot will never become
+trapped in a dead-end or a location where its local map is already fully
+explored.
+
+Identifying frontiers before planning to them avoids planning feasible
+trajectories to many future locations. Frontiers can be ranked by the
+information-theoretic reward offered from their locations, and the resulting sorted list
+of frontiers can be iterated through until a dynamically feasible and
+collision-free trajectory is found. Planning from an initial state to a goal state
+subject to dynamic and obstacle constraints becomes especially expensive in
+high-dimensional configuration spaces, and should be performed as few times as possible.
+
+After selecting a location that will yield high reward,
+one may use a real-time pathfinding algorithm such as A*~\cite{hart1968formal},
+RRT~\cite{lavalle1998rapidly}, or their many variants to generate a trajectory from
+the robot's initial state.
+
+\subsection{Forward-Arc Motion Primitives}
+\label{subsec:fa_motion_primitives}
+
+Actions can also be generated by sampling from a set of
+pre-computed motion primitives. A simple strategy for generating motion
+primitives for a ground vehicle constrained to $SE(2)$ involves
+simulating the robot's path when moving at a constant linear and angular
+velocity for a specified amount of time.
+Actions resulting from this approach form arcs of a circle with a radius that is a
+function of the specified linear and angular velocity (Fig.~\ref{fig:motion_prims}).
+%
+\begin{figure}[hb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{motion_primitives.pdf}
+  \caption{Nine motion primitives generated with $\omega = \{-0.05, -0.04,
+  \dots, 0.05\}$ rad/s, $v = 1.0$ m/s.\label{fig:motion_prims}}
+\end{figure}
+
+Consider a robot following the arc of a
+circle with velocity $v$ and rotational velocity $\omega$. Assuming the robot's
+current position is given by $\mbf{x}_t=(x_t,y_t,\theta_t)^T$, forward-arc motion primitives
+can be generated by specifying the future robot state, $\mbf{x}_{t+T}$,
+as a function of $v$ and $\omega$ for a sequence of uniformly varying
+times $T \in \mbb{R}^{+}$. These paths are described
+by a set of nonlinear differential equations:
+%
+\eq{
+  \dot{\mbf{x}}_{t+T}
+  &=
+  \bbm
+  \dot{x} \\
+  \dot{y} \\
+  \dot{\theta}
+  \ebm_{t+T}
+  =
+  \bbm
+  v \cos
+  \left(
+  \theta_{t+T}
+  \right) \\
+  v \sin
+  \left(
+  \theta_{t+T}
+  \right) \\
+  \omega
+  \ebm,
+  \label{eq:arc_differential}
+}
+%
+the solution of which is given by
+%
+\eq{
+  \mbf{x}_{t+T}
+  &=
+  \bbm
+  \frac{v}{\omega}
+  \left(
+  \sin
+  \left(
+  \omega T + \theta_{t}
+  \right)
+  -
+  \sin
+  \left(
+  \theta_{t}
+  \right)
+  \right)
+  \\
+  \frac{v}{\omega}
+  \left(
+  \cos
+  \left(
+  \theta_{t}
+  \right)
+  -\cos
+  \left(
+  \omega T + \theta_{t}
+  \right)
+  \right)
+  \\
+  \omega T
+  \ebm
+  +
+  \mbf{x}_{t}.
+  \label{eq:motion_primitive_generator}
+}
+%
+Sequentially incrementing $T$ in~\eqref{eq:motion_primitive_generator}
+produces a sampling of poses lying along an arc
+parameterized by the robot's velocity and angular velocity, with origin $\mbf{x}_{t}$.
+
+A sampling of actions with varying $v$ and $w$ values (such as that depicted in
+Fig.~\ref{fig:motion_prims}) is referred to as a
+primitive \textit{dictionary}. To generate more actions, one can construct a
+primitive \textit{library}. This is accomplished by forming a tree with nodes
+corresponding to poses at the endpoints of actions. The tree is initialized by adding
+the robot's current position as the root node. Then, a dictionary of motion
+primitives is rotated and translated to leaf nodes in the tree until a specified
+depth is reached. A primitive library is shown in
+Fig.~\ref{fig:primitive_library}.
+%
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth, trim=10mm 45mm 10mm 80mm]{lattice_graph.pdf}
+  \caption{A primitive dictionary with a depth of three constructed from a
+  library of four motion primitives. \label{fig:primitive_library}}
+\end{figure}
+
+Forward-arc motion primitives are pre-computed prior to deployment into an
+unknown environment, making them an efficient choice for real-time exploration. Collision
+checking involves stepping along actions during a breadth-first or depth-first search and
+pruning all nodes (actions) that lie below those that contain a collision.
+
+\subsection{Lattice Graph Motion Primitives}
+\label{subsec:lg_motion_primitives}
+
+A third method for generating actions defines a discrete set of goal states, and
+solves Boundary Value Problems (BVPs) to find trajectories from $(\emptyset)$ to
+each goal~\cite{pivtoraiko2005generating,pivtoraiko2009differentially,pivtoraiko2013incremental}
+(Fig.~\ref{fig:lattice_graph}). The resulting set of motion primitives can
+be rotated and translated to the robot's current position at run-time, and sampled
+from to produce candidate actions. Like forward-arc motion primitives, lattice
+graph motion primitives can be pre-computed and are therefore a suitable choice for
+real-time exploration. Collision checking for motion primitives in the lattice
+graph involves stepping along the action and checking for poses that lie outside
+of the robot's configuration space.
+
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=0.5\textwidth]{lattice_graph_white.png}
+  \caption{An $11\times 11 \times 1$ lattice graph generated by solving a BVP
+  from the robot's initial pose (middle, facing right) to a lattice of final
+poses (with final angle equal to initial angle) subject to linear and angular velocity
+constraints. No solution exists for the nodes immediately above and below the
+robot's initial position. \label{fig:lattice_graph}}
+\end{figure}
 
 \section{Information Theory}
 \label{sec:information_theory}
 
+Information theory is a branch of
+mathematics concerned with describing the information content of and between random
+variables. The remainder of this thesis borrows heavily from information theory. This section briefly
+reviews foundational elements of information theory, including definitions of core concepts and
+more abstract extensions that are relevant to the formulations in
+Chapters~\ref{chapter3}-\ref{chapter5}.
+
 \subsection{Entropies, Divergences, and Mutual Information}
+
+The concepts of entropy, divergence, and mutual information are the most basic building
+blocks of information theory.
 
 \subsection{R\'{e}nyi's $\alpha$-entropy}
 
