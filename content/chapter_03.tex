@@ -1,10 +1,72 @@
-%\chapter{Adapting Environment Models for Compactness}
 \chapter{Information-Theoretic Map Compression}
 \label{chapter3}
 
+The remaining chapters of this thesis introduce novel extensions to active perception
+that make information-theoretic reward evaluation orders of magnitude more
+efficient at the cost of information accuracy (Chapter~\ref{chapter4}), and allow the
+robot to implicitly consider and avoid complex regions
+in its local map while simultaneously planning informative paths (Chapter~\ref{chapter5}). Both
+of these extensions originate from the observation that the information content
+of a robot's sensor measurement depends on the environment
+representation. In the case of OG maps, the cell resolution parameter shares an
+intricate relationship with the robot's exploration behaviors.
+
+One example of the relationship between OG cell resolution and exploration
+behavior lies in the efficiency of raycasting. Most information-theoretic reward
+functions (e.g. SMI and CSQMI) require simulating a beam-based sensor measurement from a future
+position, which implicitly requires raycasting through the map. Intuitively, as
+the resolution of cells in the map decreases, so too does the number of cells
+that a raycast must traverse. Therefore the efficiency of information-theoretic reward evaluation
+is a function of the cell resolution of the OG. For example, using the approximate
+CSQMI technique from Charrow et al.~\cite{charrow2015icra}, this relationship is linear
+(Fig.~\ref{fig:csqmi_timing}). As will be shown, the resolution of an OG map can typically be halved several
+times before a significant amount of information about free and occupied space
+is lost. However, sequentially halving the resolution exponentially increases the
+speed of computing CSQMI, regardless of sensor range or number of beams. This
+can be seen by holding range constant and tracing vertical lines down Fig.~\ref{fig:csqmi_timing}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.65\textwidth]{csqmi_timing.pdf}
+  \caption{Time (median of $10^5$ samples) to evaluate CSQMI for a
+    single beam is linear in both the OG resolution $\Delta$, and
+  the measurement range. \label{fig:csqmi_timing}}
+\end{figure}
+
+The incentive for increasing the efficiency of information-theoretic exploration
+is clear and immediate; any reduction to the time required to evaluate an
+information-theoretic reward function will enable robots to explore at higher
+speeds, in turn allowing them to initialize (build a map) faster, or clear a
+building for threats more quickly. However, at present, there is no clear choice
+of algorithm for compressing an OG from one resolution to another.
+
+Several others have proposed strategies for map compression. The OctoMap
+framework~\cite{wurm2010octomap} builds an octree data structure to efficiently store the
+expected occupancy of cells in an environment without allocating memory for a
+large 3D grid. Jeong et al.~\cite{im2010real} compress an OG be representing it with
+wavelets using the Haar wavelet transform. Kretzschmar et
+al.~\cite{kretzschmar2012information} compress
+pose graph maps by examining the Shannon mutual information between the pose
+graph and sensor measurements. Most related to the problem framed here is the
+work by Einhorn et al.~\cite{einhorn2011finding}, which adaptively chooses an OG resolution for
+individual cells by determining which cells are intersected by measurements.
+
+Instead, the following chapter describes the first main contribution of this
+thesis: a novel strategy for OG compression using the Principle of Relevant
+Information~\cite{principe2010information}. In contrast to previous works on map
+compression, this strategy approaches the compression problem from an information theory
+perspective, optimizing a functional that describes the distortion between the
+map and its compressed form. The proposed map compression strategy yields an
+exceedingly simple compression algorithm that is founded on rate
+distortion theory. This compression algorithm acts as a basis for the
+active perception extensions introduced in Chapters~\ref{chapter4} and~\ref{chapter5}.
+
 \section{The Principle of Relevant Information}
 
-We formulate the OG compression problem as an information-theoretic optimization using the Principle of Relevant Information (PRI). PRI is a technique for learning a reduced representation $\hat{X}$ of a random variable $X$ such that both the entropy of $\hat{X}$ and the divergence of $\hat{X}$ with respect to the original data are minimized.
+The OG compression problem can be formulated as an information-theoretic optimization
+using the Principle of Relevant Information (PRI). PRI is a technique for learning a
+reduced representation $\hat{X}$ of a random variable $X$ such that both the entropy of
+$\hat{X}$ and the divergence of $\hat{X}$ with respect to the original data are minimized.
 %
 \eq{
     J(\hat{X})
@@ -18,7 +80,13 @@ We formulate the OG compression problem as an information-theoretic optimization
     \label{eq:pri_general}
 }
 
-The two terms of the PRI cost function are R\'{e}nyi's $\alpha$-entropy, which describes the amount of uncertainty in its argument, and R\'{e}nyi's $\alpha$-divergence, which is a distance measure describing distortion between $p(x)$ and $p(\hat{x})$. These terms simplify to the more common Shannon entropy and Kullback-Leibler divergence for $\alpha = 1$. The variational parameter $\lambda$ controls the amount of distortion in the compressed data. To complement the Information Bottleneck optimization described later (Sec.~\ref{subsec:ib_optimization}), we choose to minimize the $\text{H}_{2}$ entropy and Cauchy-Schwarz divergence. For discrete random variables $X$ and $\hat{X}$,
+The two terms of the PRI cost function are R\'{e}nyi's $\alpha$-entropy, which describes
+the amount of uncertainty in its argument, and R\'{e}nyi's $\alpha$-divergence, which is a
+distance measure describing distortion between $p(x)$ and $p(\hat{x})$. These terms simplify
+to the more common Shannon entropy and Kullback-Leibler divergence for $\alpha = 1$. The
+variational parameter $\lambda$ controls the amount of distortion in the compressed data.
+Following Principe et al., we choose to minimize the $\text{H}_{2}$ entropy and
+Cauchy-Schwarz divergence. For discrete random variables $X$ and $\hat{X}$,
 %
 \eq{
     \text{H}_{2}(\hat{X}) &= -\log \sum_{i} p^{2}(\hat{x}_{i}),
@@ -38,11 +106,16 @@ The two terms of the PRI cost function are R\'{e}nyi's $\alpha$-entropy, which d
 The cost function in~\eqref{eq:pri_general} is then:
 %
 \eq{
-    (1-\lambda)\, \text{H}_{2}(\hat{X})-\lambda 2 \log \sum_{i} p(x_{i})p(\hat{x_{i}}) - \lambda \text{H}_{2}(X).
+    (1-\lambda)\, \text{H}_{2}(\hat{X})-\lambda 2 \log \sum_{i}
+    p(x_{i})p(\hat{x_{i}}) - \lambda \text{H}_{2}(X).
     \label{eq:cost_func}
 }
 
-The third term has no influence on the minimization over $\hat{X}$, and can be ignored. We choose to give equal weight to the entropy and divergence, and optimize for $\lambda=1$. Noting that logs and quadratic functions increase monotonically for positive arguments, and noting that the summand in the second term of~\eqref{eq:cost_func} must be positive, the optimization can be simplified to:
+The third term has no influence on the minimization over $\hat{X}$, and can be ignored. We
+choose to give equal weight to the entropy and divergence, and optimize for $\lambda=1$.
+Noting that logs and quadratic functions increase monotonically for positive arguments,
+and noting that the summand in the second term of~\eqref{eq:cost_func} must be positive,
+the optimization can be simplified to:
 %
 \eq{
     J(\hat{X})
@@ -63,23 +136,48 @@ The third term has no influence on the minimization over $\hat{X}$, and can be i
     \begin{subfigure}[t]{0.45\textwidth}
         \centering
         \includegraphics[height=5.3cm]{compression.pdf}
-        \caption{Probability space of the top two grid cells in $m^{R}$ in~\ref{fig:pri_compression1} \label{fig:pri_compression2}}
+        \caption{Probability space of the top two grid cells
+        in $m^{R}$ in~\ref{fig:pri_compression1} \label{fig:pri_compression2}}
     \end{subfigure}
-    \caption{For each square (cubic in 3D) region $m^{R}$ in the uncompressed OG $m^{K}$, the PRI optimization finds a random variable $\tilde{m}^{R}$ that minimizes~\eqref{eq:pri_general} and is constrained to have uniform occupancy probability $\tilde{o}^{R} = (\tilde{o}^{1}, \dots, \tilde{o}^{1})$. \label{fig:pri_compression}}
+    \caption{For each square (cubic in 3D) region $m^{R}$ in the uncompressed OG $m^{K}$,
+    the PRI optimization finds a random variable $\tilde{m}^{R}$ that
+    minimizes~\eqref{eq:pri_general} and is constrained to have uniform occupancy
+    probability $\tilde{o}^{R} = (\tilde{o}^{1}, \dots, \tilde{o}^{1})$.
+  \label{fig:pri_compression}}
 \end{figure}
 
 
-\section{Framing Occupancy Grid Compression as an Optimization}
+\section{Framing Map Compression as an Optimization}
 
-To apply the PRI optimization to OG compression, let $X$ be an OG $m^{K}$ with $K$ cells. The problem must be constrained in three ways. First, because OGs encode a 2D or 3D geometry, $\hat{X}$ must represent $X$ well in local regions. Compression over the map can therefore be accomplished by performing compression in many small independent square (cubic in 3D) regions $m^{R} \subseteq m^{K}$, assuming individual grid cell occupancies are independent.  Second, we consider only the set of compressions that reduce OG cell count in each dimension by factors of two. Therefore an OG $m^{K}$ will be compressed to an OG $m^{2^{-dn}K}$, where $d$ is the OG dimension and $n$ is the number of $2\times$ compressions in each dimension. The set of compressions with this property can be expressed as:
+To apply the PRI optimization to OG compression, let $X$ be an OG $m^{K}$ with $K$ cells.
+The problem must be constrained in three ways. First, because OGs encode a 2D or 3D geometry,
+$\hat{X}$ must represent $X$ well in local regions. Compression over the map can therefore
+be accomplished by performing compression in many small independent square (cubic in 3D)
+regions $m^{R} \subseteq m^{K}$, assuming individual grid cell occupancies are independent.
+Second, we consider only the set of compressions that reduce OG cell count in each dimension
+by factors of two. Therefore an OG $m^{K}$ will be compressed to an OG $m^{2^{-dn}K}$, where
+$d$ is the OG dimension and $n$ is the number of $2\times$ compressions in each dimension. The
+set of compressions with this property can be expressed as:
 %
 \eq{
     C_{n}(m^{K}) \equiv m^{2^{-dn}K}, \quad n \in \mbb{N}_{0},
 }
 
-where superscripts denote cell count and where a compression of $n=0$ gives the original OG: $C_{0}(m^{K}) = m^{K}$. Both $m^{K}$ and $C_{n}(m^{K})$ will have the same metric dimensions, but will have different cell edge lengths and cell counts when $n \ge 1$. Finally, we enforce that $\hat{X}$ must also be an OG. Since $\text{D}_{\text{CS}}(X\vert \vert \hat{X})$ may only be computed for two random variables with the same support set, we use the PRI to find a random variable $\tilde{m}^{R}$ that has uniform occupancy probabilities, and then reduce its dimension to one, yielding a single grid cell $\tilde{m}^{1}$ (Fig.~\ref{fig:pri_compression}). Combining the single-cell $\tilde{m}^{1}$ variables from independent regions yields the compressed OG $C_{n}(m^{K})$.
+where superscripts denote cell count and where a compression of $n=0$ gives the original OG:
+$C_{0}(m^{K}) = m^{K}$. Both $m^{K}$ and $C_{n}(m^{K})$ will have the same metric dimensions,
+but will have different cell edge lengths and cell counts when $n \ge 1$. Finally, we enforce
+that $\hat{X}$ must also be an OG. Since $\text{D}_{\text{CS}}(X\vert \vert \hat{X})$ may only
+be computed for two random variables with the same support set, we use the PRI to find a random
+variable $\tilde{m}^{R}$ that has uniform occupancy probabilities, and then reduce its dimension
+to one, yielding a single grid cell $\tilde{m}^{1}$ (Fig.~\ref{fig:pri_compression}). Combining the
+single-cell $\tilde{m}^{1}$ variables from independent regions yields the compressed OG $C_{n}(m^{K})$.
 
-Rather than directly maximizing~\eqref{eq:pri_specific} over $\tilde{m}^{R}$, we are interested in finding the distribution $p(\tilde{m}^{R})$ corresponding to the maximum. $p(\tilde{m}^{R})$ is a Bernoulli distribution, and is completely determined by its single parameter $\tilde{o}^{1} = p(\tilde{m}^{R} = \{\texttt{OCC},\dots,\texttt{OCC}\}) = 1 - p(\tilde{m}^{R} = \{\texttt{EMP},\dots,\texttt{EMP}\})$. Substituting the described variables into~\eqref{eq:pri_specific},
+Rather than directly maximizing~\eqref{eq:pri_specific} over $\tilde{m}^{R}$, we are interested in
+finding the distribution $p(\tilde{m}^{R})$ corresponding to the maximum. $p(\tilde{m}^{R})$ is a
+Bernoulli distribution, and is completely determined by its single parameter
+$\tilde{o}^{1} = p(\tilde{m}^{R} = \{\texttt{OCC},\dots,\texttt{OCC}\}) = 1 -
+p(\tilde{m}^{R} = \{\texttt{EMP},\dots,\texttt{EMP}\})$. Substituting the described
+variables into~\eqref{eq:pri_specific},
 %
 \eq{
     \tilde{o}^{1}_{*} &=
@@ -91,12 +189,12 @@ Rather than directly maximizing~\eqref{eq:pri_specific} over $\tilde{m}^{R}$, we
 
 \section{Solving the Optimization}
 
-\begin{table*}[t]
+\begin{sidewaystable*}[t]
     \caption{Contingency table for a compression from the OG region $m^{R}$ to $\tilde{m}^{R}$. \texttt{O} and \texttt{E} stand for \texttt{OCC} and \texttt{EMP}. \label{tab:contingency}}
     \centering
     \scalebox{0.9}
     {
-    \renewcommand{\arraystretch}{1.5}
+    \renewcommand{\arraystretch}{3}
     \begin{tabular}{| c | c | c | c | c | c | c | c |}
         \cline{3-7}
         \multicolumn{2}{c|}{}
@@ -132,7 +230,7 @@ Rather than directly maximizing~\eqref{eq:pri_specific} over $\tilde{m}^{R}$, we
         & Total & $1-\tilde{o}^{1}$ & $0$ & $\dots$ & $0$ & $\tilde{o}^{1}$ & 1 \\ \cline{2-8}
     \end{tabular}
     }
-\end{table*}
+\end{sidewaystable*}
 
 Table~\ref{tab:contingency} shows a contingency table for a compression from the OG region $m^{R}$ to $\tilde{m}^{R}$. The middle columns of the contingency table have zero probability, since the $\tilde{m}^{R}$ must have a uniform cell probability to be able to reduce it to $\tilde{m}^{1}$ (i.e. $\tilde{o}^{R}_{i} = \tilde{o}^{R}_{j}=\tilde{o}^{1}\, \forall i,j \in 1,\dots,R$). In this section we are only interested in the marginal distributions (bottom-most row and right-most column), which are needed to determine~\eqref{eq:pri_specific2}. Substituting these,
 %

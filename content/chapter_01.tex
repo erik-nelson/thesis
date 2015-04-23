@@ -50,19 +50,33 @@ What sequence of actions should it take to minimize the time it spends
 exploring? \label{fig:motivation}}
 \end{figure}
 
-This thesis introduces an assortment of information-theoretic optimizations that
-increase the efficiency of active perception when using a beam-based sensor
-model (e.g. LIDAR, time-of-flight cameras, structured light sensors) and
-an occupancy grid map~\cite{elfes1989using}. Applying these optimizations during exploration allows a
-robot to consider a significantly larger number of future locations to move
-towards in its partially observed environment, regardless of the planning
-strategy used. Additionally, this thesis presents a method for analyzing the
-complexity of the local environment and adapting the robot's map resolution,
-planning frequency, movement speed, and exploration behaviors accordingly. By
-adapting these properties online, an autonomously exploring robot is able to speed up
-through areas with open expanses or where the map is well-known, and slow down
-when the local environment requires careful maneuvering or more thorough
-investigation.
+This thesis specifically considers the effects of environment representation on
+autonomous exploration behaviors, and introduces novel extensions to the active perception
+task that adaptively modify the environment representation in response to
+the robot's incoming sensor measurements and current map. The interplay between the robot's
+environment representation and exploration behaviors is investigated. First, a theory of
+information-theoretic map compression is developed. The map compression
+formulation is exercised to examine the information lost about a sensor
+measurement when compressing a map. Optimizing sensor information loss against
+map compression allows the robot to choose a resolution with which to
+represent its environment that maximizes the efficiency of exploration.
+The information lost through map compression can also be used to analyze the
+complexity and obstacle density of an environment. This second loss metric
+is added to the exploration reward function, allowing an autonomously exploring
+robot to choose trajectories that are both informative and safe for high-speed
+navigation.
+
+The proposed active perception extensions enable two new capabilities:
+
+\begin{enumerate}
+  \item Compressing the robot's map, when possible, increases the
+    efficiency of computing information-theoretic reward by orders of magnitude, thereby
+    enabling faster planning and navigation during exploration
+  \item Analyzing the loss in informativeness of sensor measurements when
+    compressing the map enables the robot to choose trajectories are both safe
+    (avoiding obstacle-dense regions)
+    and informative (maximizing an information-based reward).
+\end{enumerate}
 
 \section{Previous Work}
 
@@ -70,8 +84,8 @@ Prior approaches to mobile robot active perception fall into two
 broad categories: \textit{geometric} approaches that reason about the locations and
 presence of obstacles and free space in the robot's
 map~\cite{acar2002sensor,chan1993line,wang2007view,
-burgard2000collaborative,taylor1993exploration,yamauchi1997frontier}, and more
-recently, \textit{information-theoretic} approaches that treat the map as
+burgard2000collaborative,taylor1993exploration,yamauchi1997frontier}, and
+\textit{information-theoretic} approaches that treat the map as
 a multivariate random variable and choose actions that will maximally reduce its
 uncertainty~\cite{amigoni2010information,bourgault2002information,charrow2015icra,
 julian2013mutual,feder1999adaptive}. Both categories of approaches solve {\bf

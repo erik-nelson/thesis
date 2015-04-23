@@ -57,11 +57,12 @@ Ben Charrow, Sikang Liu, Vijay Kumar, and Nathan Michael.
 \newblock In {\em Robotics and Automation, 2015. Proceedings., 2015 IEEE
   International Conference on}. IEEE, 2015.
 
-\bibitem{elfes1989using}
-Alberto Elfes.
-\newblock {\em Occupancy grids: a probabilistic framework for robot perception
-  and navigation}.
-\newblock PhD thesis, Carnegie Mellon University, 1989.
+\bibitem{einhorn2011finding}
+Erik Einhorn, C~Schroter, and H~Gross.
+\newblock Finding the adequate resolution for grid mapping-cell sizes locally
+  adapting on-the-fly.
+\newblock In {\em Robotics and Automation (ICRA), 2011 IEEE International
+  Conference on}, pages 1843--1848. IEEE, 2011.
 
 \bibitem{feder1999adaptive}
 Hans Jacob~S Feder, John~J Leonard, and Christopher~M Smith.
@@ -86,6 +87,13 @@ Dirk Holz, Nicola Basilico, Francesco Amigoni, and Sven Behnke.
 \newblock A comparative evaluation of exploration strategies and heuristics to
   improve them.
 \newblock In {\em ECMR}, pages 25--30, 2011.
+
+\bibitem{im2010real}
+Jeong~Joon Im, Alexander Leonessa, and Andrew Kurdila.
+\newblock A real-time data compression and occupancy grid map generation for
+  ground-based 3d lidar data using wavelets.
+\newblock In {\em 3rd ASME Dynamic Systems and Control Conference, Boston, MA},
+  2010.
 
 \bibitem{julian2013mutual}
 Brian~J Julian, Sertac Karaman, and Daniela Rus.
@@ -112,6 +120,18 @@ Thomas Kollar and Nicholas Roy.
 \newblock {\em The International Journal of Robotics Research}, 27(2):175--196,
   2008.
 
+\bibitem{kretzschmar2012information}
+Henrik Kretzschmar and Cyrill Stachniss.
+\newblock Information-theoretic compression of pose graphs for laser-based
+  slam.
+\newblock {\em The International Journal of Robotics Research},
+  31(11):1219--1230, 2012.
+
+\bibitem{kullback1951information}
+Solomon Kullback and Richard~A Leibler.
+\newblock On information and sufficiency.
+\newblock {\em The annals of mathematical statistics}, pages 79--86, 1951.
+
 \bibitem{lavalle1998rapidly}
 Steven~M LaValle.
 \newblock Rapidly-exploring random trees a Цew tool for path planning.
@@ -134,8 +154,8 @@ Erik Nelson and Nathan Michael.
 Mihail Pivtoraiko and Alonzo Kelly.
 \newblock Generating near minimal spanning control sets for constrained motion
   planning in discrete state spaces.
-\newblock In {\em IEEE/RSJ International Conference on Intelligent Robots and
-  Systems, 2005. (IROS 2005).}, pages 3231--3237. IEEE, 2005.
+\newblock In {\em Intelligent Robots and Systems, 2005.(IROS 2005). 2005
+  IEEE/RSJ International Conference on}, pages 3231--3237. IEEE, 2005.
 
 \bibitem{pivtoraiko2009differentially}
 Mihail Pivtoraiko, Ross~A Knepper, and Alonzo Kelly.
@@ -149,6 +169,34 @@ Mihail Pivtoraiko, Daniel Mellinger, and Vijay Kumar.
   environments.
 \newblock In {\em Robotics and Automation (ICRA), 2013 IEEE International
   Conference on}, pages 2452--2458. IEEE, 2013.
+
+\bibitem{principe2010information}
+Jose~C Principe.
+\newblock {\em Information theoretic learning: R{\'e}nyi's entropy and kernel
+  perspectives}.
+\newblock Springer Science \& Business Media, 2010.
+
+\bibitem{rao2008learning}
+S~Rao.
+\newblock {\em Unsupervised Learning: An Information Theoretic Learning
+  Approach}.
+\newblock PhD thesis, University of Florida, Gainesville, 2008.
+
+\bibitem{renyi1961measures}
+Alfred Renyi.
+\newblock On measures of entropy and information.
+\newblock In {\em Fourth Berkeley symposium on mathematical statistics and
+  probability}, volume~1, pages 547--561, 1961.
+
+\bibitem{rudin1964principles}
+Walter Rudin.
+\newblock {\em Principles of mathematical analysis}, volume~3.
+\newblock McGraw-Hill New York, 1964.
+
+\bibitem{shannon1948mathematical}
+Claude~Elwood Shannon.
+\newblock A mathematical theory of communication.
+\newblock {\em Bell System Technical Journal}, 27:379--423, 1948.
 
 \bibitem{shen20113d}
 Shaojie Shen, Nathan Michael, and Vijay Kumar.
@@ -186,6 +234,14 @@ Pengpeng Wang.
 \newblock {\em View planning with combined view and travel cost}.
 \newblock PhD thesis, School of Engineering Science-Simon Fraser University,
   2007.
+
+\bibitem{wurm2010octomap}
+Kai~M Wurm, Armin Hornung, Maren Bennewitz, Cyrill Stachniss, and Wolfram
+  Burgard.
+\newblock Octomap: A probabilistic, flexible, and compact 3d map representation
+  for robotic systems.
+\newblock In {\em Proc. of the ICRA 2010 workshop on best practice in 3D
+  perception and modeling for mobile manipulation}, volume~2, 2010.
 
 \bibitem{yamauchi1997frontier}
 Brian Yamauchi.
