@@ -76,9 +76,55 @@ Figure~\ref{fig:loss_compression} displays the influence of $\beta$ on the IB op
         \includegraphics[height=5.2cm]{beta.pdf}
         \caption{\label{fig:loss_compression2}}
     \end{subfigure}
-    \caption{\ref{fig:loss_compression1} shows an uncompressed map and measurement taken from a planned future position. With this map and expected laser scan, the optimal compression level (filled markers) computed with~\eqref{eq:ib_arg_opt} decreases as $\beta$ increases, favoring preservation of information about the measurement as opposed to compression (\ref{fig:loss_compression2}). \label{fig:loss_compression}}
+    \caption[Information Bottleneck optimization for varying values of $\beta$]{\ref{fig:loss_compression1} shows an uncompressed map and measurement taken from a planned future position. With this map and expected laser scan, the optimal compression level (filled markers) computed with~\eqref{eq:ib_arg_opt} decreases as $\beta$ increases, favoring preservation of information about the measurement as opposed to compression (\ref{fig:loss_compression2}). \label{fig:loss_compression}}
 \end{figure}
 
 \section{Results}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{groundbot.jpg}
+  \caption{Robot Platform\label{fig:robot_platform}}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.64\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{ground_experiment_map2.pdf}
+    \caption{Exploration path \label{fig:ib_exploration_path}}
+  \end{subfigure}
+  \\
+  \begin{subfigure}[t]{0.8\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{ground_experiment.pdf}
+    \caption{Time evolution of $n$ and velocity.\label{fig:ib_exploration_plots}}
+  \end{subfigure}
+  \caption{As the ground robot explores, it recomputes an optimal OG resolution and adapts its dynamics accordingly.\label{fig:ground_experiment}}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level0_explore_small.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level2_explore_small.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level4_explore_small.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \caption{\label{fig:}}
+\end{figure}
+
+
 
 \section{Chapter Summary}

@@ -25,7 +25,7 @@ components~\cite{shen20113d}:
   \item[\bf component 1:] Identifying regions in the environment that, when visited, will
     spatially extend or reduce uncertainty in the current map
   \item[\bf component 2:] Autonomously navigating to the aforementioned regions, while
-    simultaneously localizing to the map and updating it with acquired sensor
+    simultaneously localizing to the map and updating it with incoming sensor
     measurements
 \end{enumerate}
 
@@ -44,39 +44,146 @@ exploration.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.6\textwidth]{example-image.png}
-  \caption{A household service robot awakes in an unknown environment. Prior to
+  \caption[A household service robot must explore its unknown environment.]{A household service robot awakes in an unknown environment. Prior to
   accomplishing its main functionalities, it will require a map of its surroundings.
 What sequence of actions should it take to minimize the time it spends
 exploring? \label{fig:motivation}}
 \end{figure}
 
-This thesis specifically considers the effects of environment representation on
-autonomous exploration behaviors, and introduces novel extensions to the active perception
-task that adaptively modify the environment representation in response to
-the robot's incoming sensor measurements and current map. The interplay between the robot's
-environment representation and exploration behaviors is investigated. First, a theory of
-information-theoretic map compression is developed. The map compression
-formulation is exercised to examine the information lost about a sensor
-measurement when compressing a map. Optimizing sensor information loss against
-map compression allows the robot to choose a resolution with which to
-represent its environment that maximizes the efficiency of exploration.
-The information lost through map compression can also be used to analyze the
-complexity and obstacle density of an environment. This second loss metric
-is added to the exploration reward function, allowing an autonomously exploring
-robot to choose trajectories that are both informative and safe for high-speed
-navigation.
+%This thesis specifically considers the effects of environment representation on
+%autonomous exploration behaviors, and introduces novel extensions to the active perception
+%task that adaptively modify the environment representation in response to
+%the robot's incoming sensor measurements and current map. The interplay between the robot's
+%environment representation and exploration behaviors is investigated. First, a theory of
+%information-theoretic map compression is developed. The map compression
+%formulation is exercised to examine the information lost about a sensor
+%measurement when compressing a map. Optimizing sensor information loss against
+%map compression allows the robot to choose a resolution with which to
+%represent its environment that maximizes the efficiency of exploration.
+%The information lost through map compression can also be used to analyze the
+%complexity and obstacle density of an environment. This second loss metric
+%is added to the exploration reward function, allowing an autonomously exploring
+%robot to choose trajectories that are both informative and safe for high-speed
+%navigation.
 
-The proposed active perception extensions enable two new capabilities:
+%The proposed active perception extensions enable two new capabilities:
 
-\begin{enumerate}
-  \item Compressing the robot's map, when possible, increases the
-    efficiency of computing information-theoretic reward by orders of magnitude, thereby
-    enabling faster planning and navigation during exploration
-  \item Analyzing the loss in informativeness of sensor measurements when
-    compressing the map enables the robot to choose trajectories are both safe
-    (avoiding obstacle-dense regions)
-    and informative (maximizing an information-based reward).
-\end{enumerate}
+%\begin{enumerate}
+%  \item Compressing the robot's map, when possible, increases the
+%    efficiency of computing information-theoretic reward by orders of magnitude, thereby
+%    enabling faster planning and navigation during exploration
+%  \item Analyzing the loss in informativeness of sensor measurements when
+%    compressing the map enables the robot to choose trajectories are both safe
+%    (avoiding obstacle-dense regions)
+%    and informative (maximizing an information-based reward).
+%\end{enumerate}
+
+\section{Thesis Problem}
+
+This thesis focuses on the problem of enabling a mobile robot to
+\textit{intelligently} and \textit{efficiently} explore its environment
+without human intervention. The robot is assumed to be initialized without a
+priori access to a map, and is assumed to be capable of creating one in
+real-time from incoming sensor measurements with a Simultaneous Localization and
+Mapping (SLAM) subsystem~\cite{thrun2005probabilistic}. The robot's task is to select control actions that
+maximize the likelihood that it will acquire informative sensor measurements
+in the future, given that it only knows a partial representation of the
+environment through which it is navigating. An \textit{informative sensor measurement}
+is one that reduces uncertainty in the robot's map, allowing it to make
+more informed subsequent decisions. The exploration task is
+challenging because determining actions that will result in a minimum-time or
+minimum-energy traversal of the environment is impossible (or highly unlikely) without
+full a priori knowledge of the map. Instead, the environment must be modeled as a random
+quantity whose structure is only understood after it is observed by the robot.
+
+State-of-the-art solutions to the exploration problem involve choosing control actions
+that drive the robot to states from which it will receive sensor measurements that
+maximally reduce uncertainty in its map (i.e. maximize an \textit{information-theoretic
+reward function}). Although computationally
+inefficient, this category of solutions drives a robot to unexplored territories
+in a smaller amount of time than other exploration approaches. However, there
+remains much room for improvement. For example, a highly-efficient recent approach by
+Charrow et al. requires eleven minutes to explore a $17$ m $\times 18$ m $\times
+3$ m building with a quadrotor - enough time for the robot's batteries to
+deplete twice~\cite{charrow2015icra}. Any increase to the efficiency of
+information-theoretic exploration will allow the robot to consider more future
+actions before selecting and executing one. By considering more actions, a robot
+might discover a highly informative location in the environment that it
+previously would not have, increasing exploration performance. This thesis addresses
+the inefficiencies and shortcomings of
+of information-theoretic exploration, summarized in the following statement:
+
+%% Thesis Problem
+\begin{center} \fbox{
+ \parbox{0.9\linewidth}
+ { {\bf Thesis Problem:}\\ Solutions to the mobile robot active perception task
+ that involve optimization of information-theoretic cost functions are too
+ computationally expensive for high-speed exploration in complex environments.}
+} \end{center}
+
+Complex environments include those which are obstacle-dense, three dimensional, or
+otherwise difficult for a mobile robot to navigate. These are the same
+environments that future autonomous service robots, delivery robots, and cars
+will need to be capable of exploring.
+
+\section{Thesis Statement}
+
+This thesis examines the relationship between a robot's environment
+representation and the efficiency of its exploration behaviors.
+Specifically, it considers compressing the robot's map to
+increase the speed at which information-theoretic reward can be computed along
+planned actions. \textit{Map compression} refers to the process of
+decreasing the map's resolution while retaining as much information as
+possible about obstacles and free space. Reducing the memory required to
+store the map necessarily causes structural information about the environment to
+be discarded. Compression therefore decreases the accuracy of information-gain
+computed with respect to a sensor measurement. The tradeoff between information accuracy and
+redundancy is investigated to characterize situations in which the robot's map may be
+compressed while sacrificing a minimal amount of information about an expected
+future sensor measurement. Reducing the amount of time required to evaluate
+reward over any one action allows the robot to consider more actions before
+its planning update rate forces it to choose one for execution.
+
+The idea of map compression, while primarily aimed to make exploration more
+efficient, opens the door to interesting new methods that can
+be used to analyze the complexity of the robot's environment. For example,
+as will be demonstrated in Chapter~\ref{chapter5},
+the information difference between an uncompressed and
+compressed map correlates with the obstacle-density of the environment.
+Therefore the same compression strategy can be used to persuade a robot to
+choose actions that are both informative and safe, avoiding obstacle-dense
+regions. This consideration also increases the speed of exploration; by
+implicitly avoiding obstacles, the robot will be drawn to open expanses where it
+need not be concerned about collisions, and will able to navigate more quickly.
+
+The ideas introduced in the remainder of this thesis culminate in the following
+statements:
+
+% Thesis Statement
+\begin{center} \fbox{ \parbox{0.9\linewidth} { {\bf Thesis Statement:}
+      \begin{itemize}
+        \setlength\itemsep{0.0em}
+        \item Compressing an occupancy grid map
+          increases the efficiency of computing information-theoretic reward
+          by orders of magnitude, thereby enabling faster planning and navigation during
+          exploration.
+        \item Maps can often be compressed in a way that minimally sacrifices the accuracy of
+          mutual information with respect to a sensor measurement.
+        \item Analyzing the loss in informativeness of sensor
+          measurements when compressing a map enables the robot to choose trajectories
+          that are both safe (avoiding obstacle-dense regions) and informative (maximizing
+          an information-theoretic reward).
+      \end{itemize}
+} } \end{center}
+
+%  \item Compressing the robot's map, when possible, increases the
+%    efficiency of computing information-theoretic reward by orders of magnitude, thereby
+%    enabling faster planning and navigation during exploration
+%  \item Analyzing the loss in informativeness of sensor measurements when
+%    compressing the map enables the robot to choose trajectories are both safe
+%    (avoiding obstacle-dense regions)
+%    and informative (maximizing an information-based reward).
+
 
 \section{Previous Work}
 
@@ -106,13 +213,6 @@ position has minimum length, or requires minimal time or energy input to
 traverse. Similarly, an agent may decide to only plan paths to locations
 from which frontiers can be observed by its onboard sensors.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[trim=0cm 0.4cm 0.1cm 0.1cm, clip, width=0.8\textwidth]{frontiers.pdf}
-  \caption{A partially explored map with frontiers between free and unknown
-  space highlighted in blue.\label{fig:frontiers}}
-\end{figure}
-
 While effective in 2D environments, frontier exploration algorithms have
 several restrictive qualities. First, the na\"{i}ve extension of frontier exploration
 from 2D to 3D maps poses a non-trivial challenge; as the
@@ -136,9 +236,17 @@ original motivation for developing a category of information-theoretic explorati
 
 \begin{figure}[t]
   \centering
+  \includegraphics[trim=0cm 0.4cm 0.1cm 0.1cm, clip, width=0.8\textwidth]{frontiers.pdf}
+  \caption[Frontiers in a partially explored map.]{A partially explored map with frontiers between free and unknown
+  space highlighted in blue.\label{fig:frontiers}}
+\end{figure}
+
+
+\begin{figure}[t]
+  \centering
   \centering
   \includegraphics[width=0.7\textwidth]{sensor_frontier.pdf}
-  \caption{Traditional frontier exploration would visit the green location first
+  \caption[Effects of modeling sensors on frontier exploration.]{Traditional frontier exploration would visit the green location first
     because it is closest. A simple extension involves simulating sensor
     measurements from frontiers and examining their informativeness~\cite{gonzalez2002navigation}. Applying this
     extension would cause robot to visit the red frontier first, since that
@@ -184,7 +292,7 @@ functions in 2D and 3D environments.
         \includegraphics[height=5.0cm]{csqmi_map.pdf}
         \caption{\label{fig:og_csqmi}}
     \end{subfigure}
-    \caption{Two variants of mutual information (Fig.~\ref{fig:og_mi}: Shannon;
+    \caption[Maximizing mutual information drives a robot to unexplored areas.]{Two variants of mutual information (Fig.~\ref{fig:og_mi}: Shannon;
     Fig.~\ref{fig:og_csqmi}: Cauchy-Schwarz Quadratic) densely computed in free space
   over an occupancy grid (Fig.~\ref{fig:og}) using a $100$-beam omnidirectional 2D
 laser with $30$ m range. An exemplary sensor measurement is depicted in
@@ -214,37 +322,6 @@ robot might wish to travel to. Julian et al. report that densely calculating
 mutual information over the free space in a large $1500$ m$^{2}$ map requires
 approximately ten seconds with a parallelized implementation using a $3.4$ Ghz
 quad-core CPU and NVIDIA GTX 690 graphics card~\cite{julian2013mutual}.
-
-\section{Thesis Problem}
-
-Although inefficient, information-theoretic solutions to the active perception task
-are superior to geometric solutions in many ways. However, modern computers cannot densely
-evaluate information-theoretic objective functions over a robot's map in real-time.
-Any strategy that makes the evaluation of information-theoretic objective functions more
-efficient will allow a robot to consider more future locations prior to taking
-an action towards one, thereby increasing the speed at which the robot is able
-to explore an environment.
-
-Currently, the most efficient information-theoretic exploration algorithms are
-too slow for the motivating scenario described in
-Fig.~\ref{fig:motivation}. For example, a highly-efficient recent approach
-by Charrow et al., requires eleven minutes to explore a $17$ m $\times 18$ m $
-\times 3$ m building with a quadrotor - enough time for the quadrotor's batteries to
-deplete twice~\cite{charrow2015icra}. This thesis addresses the inefficiencies of information-theoretic exploration,
-summarized in the following statement:
-
-% Thesis Problem
-\begin{center} \fbox{
-  \parbox{0.9\linewidth}
-  { {\bf Thesis Problem:} Solutions to the mobile robot active perception task
-  that involve optimization of information-theoretic cost functions are too
-  computationally expensive for high-speed exploration in complex environments.}
-} \end{center}
-
-\section{Thesis Statement}
-
-This thesis proposes occupancy grid compression as a solution to
-the computational inefficiencies of information-theoretic exploration.
 
 \section{Outline}
 

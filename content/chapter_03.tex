@@ -28,7 +28,7 @@ can be seen by holding range constant and tracing vertical lines down Fig.~\ref{
 \begin{figure}
   \centering
   \includegraphics[width=0.65\textwidth]{csqmi_timing.pdf}
-  \caption{Time (median of $10^5$ samples) to evaluate CSQMI for a
+  \caption[Time complexity of computing CSQMI for a varying map resolution.]{Time (median of $10^5$ samples) to evaluate CSQMI for a
     single beam is linear in both the OG resolution $\Delta$, and
   the measurement range. \label{fig:csqmi_timing}}
 \end{figure}
@@ -43,15 +43,15 @@ of algorithm for compressing an OG from one resolution to another.
 Several others have proposed strategies for map compression. The OctoMap
 framework~\cite{wurm2010octomap} builds an octree data structure to efficiently store the
 expected occupancy of cells in an environment without allocating memory for a
-large 3D grid. Jeong et al.~\cite{im2010real} compress an OG be representing it with
+large 3D grid. Jeong et al.~\cite{im2010real} compress an OG by representing it with
 wavelets using the Haar wavelet transform. Kretzschmar et
 al.~\cite{kretzschmar2012information} compress
-pose graph maps by examining the Shannon mutual information between the pose
-graph and sensor measurements. Most related to the problem framed here is the
+pose graph maps by examining the SMI between the pose
+graph and sensor measurements. Most related to the formulations in this chapter is the
 work by Einhorn et al.~\cite{einhorn2011finding}, which adaptively chooses an OG resolution for
 individual cells by determining which cells are intersected by measurements.
 
-Instead, the following chapter describes the first main contribution of this
+Instead of using a previous approach, the following chapter describes the first main contribution of this
 thesis: a novel strategy for OG compression using the Principle of Relevant
 Information~\cite{principe2010information}. In contrast to previous works on map
 compression, this strategy approaches the compression problem from an information theory
@@ -139,7 +139,7 @@ the optimization can be simplified to:
         \caption{Probability space of the top two grid cells
         in $m^{R}$ in~\ref{fig:pri_compression1} \label{fig:pri_compression2}}
     \end{subfigure}
-    \caption{For each square (cubic in 3D) region $m^{R}$ in the uncompressed OG $m^{K}$,
+    \caption[Occupancy grid compression sequence.]{For each square (cubic in 3D) region $m^{R}$ in the uncompressed OG $m^{K}$,
     the PRI optimization finds a random variable $\tilde{m}^{R}$ that
     minimizes~\eqref{eq:pri_general} and is constrained to have uniform occupancy
     probability $\tilde{o}^{R} = (\tilde{o}^{1}, \dots, \tilde{o}^{1})$.
@@ -190,7 +190,7 @@ variables into~\eqref{eq:pri_specific},
 \section{Solving the Optimization}
 
 \begin{sidewaystable*}[t]
-    \caption{Contingency table for a compression from the OG region $m^{R}$ to $\tilde{m}^{R}$. \texttt{O} and \texttt{E} stand for \texttt{OCC} and \texttt{EMP}. \label{tab:contingency}}
+  \caption[A contingency table for occupancy grid compression distributions.]{Contingency table for a compression from the OG region $m^{R}$ to $\tilde{m}^{R}$. \texttt{O} and \texttt{E} stand for \texttt{OCC} and \texttt{EMP}. \label{tab:contingency}}
     \centering
     \scalebox{0.9}
     {
@@ -280,5 +280,73 @@ where $p_{\text{occ}}$ and $p_{\text{free}}$ are the thresholds for occupied and
 \section{Occupancy Grid Pyramids}
 
 \section{Results}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{compression0.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{compression1.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{compression2.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \\
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{compression3.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{compression4.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{compression5.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \caption{\label{fig:}}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level0.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level1.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \\
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level3.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{level5.png}
+    \caption{\label{fig:}}
+  \end{subfigure}
+  \caption{\label{fig:}}
+\end{figure}
+
 
 \section{Chapter Summary}
