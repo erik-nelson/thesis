@@ -38,6 +38,70 @@ Most importantly for OG compression, when combined with the PRI approach in Sect
 
 \section{Optimizing Map Resolution for Sensing}
 
+\begin{sidewaystable*}[Ht!]
+  \caption[A contingency table for occupancy grid compression
+  distributions.]{Contingency table for a compression from the OG region
+  $\mbf{m}^{R}$ to $\tilde{\mbf{m}}^{R}$. \texttt{O} and \texttt{E} stand for \texttt{OCC} and \texttt{EMP}. \label{tab:contingency}}
+    \centering
+    \scalebox{0.9}
+    {
+    \renewcommand{\arraystretch}{3}
+    \begin{tabular}{| c | c | c | c | c | c | c | c |}
+        \cline{3-7}
+        \multicolumn{2}{c|}{}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c}{$\tilde{\mbf{m}}^{R}$}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c|}{}
+        & \multicolumn{1}{c}{}
+        \\ \cline{3-8}
+        \multicolumn{2}{c|}{}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{E}} & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{O}} & $\dots$ & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{E}} & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{O}} & Total \\ \cline{1-4}\cline{6-8}
+        \multirow{5}{*}{$\mbf{m}^{R}$}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{E}} &
+        $w_{2}\cdot(1-\tilde{\mbf{o}}^{1}) \cdot
+        \prod_{i=1}^{R}(1-\mbf{o}_{i}^{R})$ & $0$ & $\dots$ & $0$ & $w_{3}\cdot
+        \tilde{\mbf{o}}^{1}\cdot \prod_{i=1}^{R}(1-\mbf{o}_{i}^{R})$ &
+        $\prod_{i=1}^{R}(1-\mbf{o}_{i}^{R})$\\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{O}} &
+        $w_{1}\cdot(1-\tilde{\mbf{o}}^{1})\cdot \mbf{o}_{1}^{R}\cdot
+        \prod_{i=2}^{R}(1-\mbf{o}_{i}^{R})$ & $0$ & $\dots$ & $0$ &
+        $w_{4}\cdot\tilde{\mbf{o}}^{1}\cdot \mbf{o}_{1}\cdot
+        \prod_{i=2}^{R}(1-\mbf{o}_{i}^{R})$ & $\mbf{o}_{1}\cdot
+        \prod_{i=2}^{R}(1-\mbf{o}_{i}^{R})$\\ \cline{2-4}\cline{6-8}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\ddots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c|}{$\vdots$} \\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{E}} & $ w_{1}
+        \cdot (1-\tilde{\mbf{o}}^{1})\cdot (1-\mbf{o}_{1}^{R}) \cdot
+        \prod_{i=2}^{R} \mbf{o}_{i}^{R}$ & $0$ & $\dots$ & $0$ & $w_{4}\cdot
+        \tilde{\mbf{o}}^{1}\cdot (1-\mbf{o}_{1}^{R}) \cdot \prod_{i=2}^{R}
+        \mbf{o}_{i}^{R}$ & $(1-\mbf{o}_{1}^{R}) \cdot \prod_{i=2}^{R} \mbf{o}_{i}^{R}$\\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{O}} &
+        $w_{1}\cdot(1-\tilde{\mbf{o}}^{1})\cdot \prod_{i=1}^{R}\mbf{o}_{i}^{R}$
+        & $0$ & $\dots$ & $0$ & $w_{4}\cdot\tilde{\mbf{o}}^{1}\cdot
+        \prod_{i=1}^{R}\mbf{o}_{i}^{R}$ & $\prod_{i=1}^{R}\mbf{o}_{i}^{R}$ \\ \cline{1-4}\cline{6-8}
+        \multicolumn{1}{c|}{}
+        & Total & $1-\tilde{\mbf{o}}^{1}$ & $0$ & $\dots$ & $0$ &
+        $\tilde{\mbf{o}}^{1}$ & 1 \\ \cline{2-8}
+    \end{tabular}
+    }
+\end{sidewaystable*}
+
+
+
 The second term can be computed using~\eqref{eq:csqmi}, and is $2^{1\times n}$ times more efficient than computing~\eqref{eq:csqmi} with respect to the uncompressed map $m^{K}$ (where $d=1$ because $\text{I}_{\text{CS}}(m;z_{\tau})$ is computed using 1D raycasts). Since $\text{I}_{\text{CS}}(m^{K};C_{n}(m^{K}))$ describes the divergence between the distributions $p(m^{K},C_{n}(m^{K}))$ and $p(m^{K})p(C_{n}({m}^{K}))$, the first term in~\eqref{eq:csqmi} can be computed by substituting these for $p(x_i)$ and $p(\hat{x}_{i})$ in the definition of Cauchy-Schwarz divergence~\eqref{eq:cs_divergence}.
 
 However, the joint distribution $p(m^{K},C_{n}(m^{K}))$ is underdetermined by two variables, and must be constrained before computing~\eqref{eq:ib_arg_opt}. While the remaining two degrees of freedom make the IB cost function arbitrary for a single resolution, fixing the joint distribution and using it to compute CSQMI across different grid resolutions still yields a meaningful optimization. To constrain the extra degrees of freedom we first decompose the joint distribution into independent regions $r \in m^{K}$:
@@ -67,13 +131,13 @@ Figure~\ref{fig:loss_compression} displays the influence of $\beta$ on the IB op
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \centering
-        \includegraphics[height=5.2cm]{plan_ahead.png}
+        \includegraphics[height=6cm]{plan_ahead.png}
         \caption{\label{fig:loss_compression1}}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \centering
-        \includegraphics[height=5.2cm]{beta.pdf}
+        \includegraphics[height=6.5cm]{beta.pdf}
         \caption{\label{fig:loss_compression2}}
     \end{subfigure}
     \caption[Information Bottleneck optimization for varying values of $\beta$]{\ref{fig:loss_compression1} shows an uncompressed map and measurement taken from a planned future position. With this map and expected laser scan, the optimal compression level (filled markers) computed with~\eqref{eq:ib_arg_opt} decreases as $\beta$ increases, favoring preservation of information about the measurement as opposed to compression (\ref{fig:loss_compression2}). \label{fig:loss_compression}}
@@ -101,28 +165,6 @@ Figure~\ref{fig:loss_compression} displays the influence of $\beta$ on the IB op
     \caption{Time evolution of $n$ and velocity.\label{fig:ib_exploration_plots}}
   \end{subfigure}
   \caption{As the ground robot explores, it recomputes an optimal OG resolution and adapts its dynamics accordingly.\label{fig:ground_experiment}}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[t]{0.3\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{level0_explore_small.png}
-    \caption{\label{fig:}}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.3\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{level2_explore_small.png}
-    \caption{\label{fig:}}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.3\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{level4_explore_small.png}
-    \caption{\label{fig:}}
-  \end{subfigure}
-  \caption{\label{fig:}}
 \end{figure}
 
 

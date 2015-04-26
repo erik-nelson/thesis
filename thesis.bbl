@@ -7,6 +7,12 @@ Ercan~U Acar and Howie Choset.
 \newblock {\em The International Journal of Robotics Research}, 21(4):345--366,
   2002.
 
+\bibitem{adelson1984pyramid}
+Edward~H Adelson, Charles~H Anderson, James~R Bergen, Peter~J Burt, and Joan~M
+  Ogden.
+\newblock Pyramid methods in image processing.
+\newblock {\em RCA engineer}, 29(6):33--41, 1984.
+
 \bibitem{amigoni2010information}
 Francesco Amigoni and Vincenzo Caglioti.
 \newblock An information-based exploration strategy for environment mapping
@@ -170,6 +176,11 @@ Mihail Pivtoraiko, Daniel Mellinger, and Vijay Kumar.
 \newblock In {\em Robotics and Automation (ICRA), 2013 IEEE International
   Conference on}, pages 2452--2458. IEEE, 2013.
 
+\bibitem{pomerleau2013comparing}
+Francois Pomerleau, Francis Colas, Roland Siegwart, and Stephane Magnenat.
+\newblock Comparing icp variants on real-world data sets.
+\newblock {\em Autonomous Robots}, 34(3):133--148, 2013.
+
 \bibitem{principe2010information}
 Jose~C Principe.
 \newblock {\em Information theoretic learning: R{\'e}nyi's entropy and kernel
@@ -197,6 +208,13 @@ Walter Rudin.
 Claude~Elwood Shannon.
 \newblock A mathematical theory of communication.
 \newblock {\em Bell System Technical Journal}, 27:379--423, 1948.
+
+\bibitem{shen2011autonomous}
+Shaojie Shen, Nathan Michael, and Vijay Kumar.
+\newblock Autonomous multi-floor indoor navigation with a computationally
+  constrained mav.
+\newblock In {\em Robotics and automation (ICRA), 2011 IEEE international
+  conference on}, pages 20--25. IEEE, 2011.
 
 \bibitem{shen20113d}
 Shaojie Shen, Nathan Michael, and Vijay Kumar.

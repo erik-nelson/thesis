@@ -46,6 +46,7 @@ cell occupancy probabilities:
   p\left(\mbf{m} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right)
   &=
   \prod_{i} p\left(m_{i} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right).
+  \label{eq:og_independence}
 }
 %
 For notational simplicity, the map conditioned on random variables
@@ -331,20 +332,20 @@ $\text{D}_{\text{KL}}$, are given by
 \eq{
   \text{H}\left(X\right)
   &=
-  - \sum_{x_{i} \in \mc{X}} P(x_{i}) \log_{2} P(x_{i}),
+  - \sum_{x_{i} \in \mc{X}} p(x_{i}) \log_{2} p(x_{i}),
   \\[1cm]
   \text{D}_{\text{KL}}
-  \left(P \vert \vert Q\right)
+  \left(p \vert \vert q\right)
   &=
   \sum_{x_{i} \in \mc{X}}
-  P(x_{i})
+  p(x_{i})
   \log_{2}
   \frac
-  {P(x_{i})}
-  {Q(x_{i})},
+  {p(x_{i})}
+  {q(x_{i})},
 }
 %
-where $\mc{X}$ is the sample space of $X$, and $P$ and $Q$ are discrete probability
+where $\mc{X}$ is the sample space of $X$, and $p$ and $q$ are discrete probability
 distributions over $X$. While Shannon entropy and Kullback-Leibler divergence
 succinctly describe critical concepts of information theory, alternative definitions of
 these concepts exist.
@@ -359,7 +360,7 @@ form
   \frac{1}{1-\alpha}
   \log_{2}
   \sum_{x_{i} \in \mc{X}}
-  P^{\alpha}\left(x_{i}\right)
+  p^{\alpha}\left(x_{i}\right)
   \quad \text{(discrete)}
   \\[1cm]
   \text{H}_{\alpha}\left(X\right)
@@ -385,19 +386,19 @@ generalize and extend the properties of the Kullback-Leibler divergence. The
 Cauchy-Schwarz (CS) divergence is one measure that is of
 particular importance to this thesis. Cauchy-Schwarz divergence can be derived by
 substituting two
-distributions, $P$ and $Q$ into the Cauchy-Schwarz inequality~\cite{rudin1964principles}:
+distributions, $p$ and $q$ into the Cauchy-Schwarz inequality~\cite{rudin1964principles}:
 %
 \eq{
   \sqrt{
     \sum_{x_{i} \in \mc{X}}
-    P^{2}(x_{i})
+    p^{2}(x_{i})
     \sum_{x_{i} \in \mc{X}}
-    Q^{2}(x_{i})
+    q^{2}(x_{i})
   }
   &\ge
   \sum_{x_{i} \in \mc{X}}
-  P(x_{i})
-  Q(x_{i})
+  p(x_{i})
+  q(x_{i})
   \quad \text{(discrete)}
   \\[1cm]
   \sqrt{
@@ -419,21 +420,21 @@ Cauchy-Schwarz divergence measures the extent of this inequality.
 %
 \eq{
   \text{D}_{\text{CS}}
-  \left(P \vert \vert Q\right)
+  \left(p \vert \vert q\right)
   &=
   \log
   \frac
   {
     \sum\limits_{x_{i} \in \mc{X}}
-    P^{2}(x_{i})
+    p^{2}(x_{i})
     \sum\limits_{x_{i} \in \mc{X}}
-    Q^{2}(x_{i})
+    q^{2}(x_{i})
   }
   {
     \left(
     \sum\limits_{x_{i} \in \mc{X}}
-    P(x_{i})
-    Q(x_{i})
+    p(x_{i})
+    q(x_{i})
     \right)^{2}
   }
   \quad \text{(discrete)}
@@ -501,7 +502,7 @@ cross-entropy~\cite{rao2008learning}:
   &=
   -\log_{2}
   \sum_{x_{i} \in \mc{X}, y_{i} \in \mc{Y}}
-  P(x_{i})Q(y_{i})
+  p(x_{i})q(y_{i})
   \quad \text{(discrete)}
   \\[1cm]
   \text{H}_{2}\left(X;Y\right)
@@ -512,6 +513,7 @@ cross-entropy~\cite{rao2008learning}:
   q(y)
   dx dy
   \quad \text{(continuous)}.
+  \label{eq:cross_entropy}
 }
 
 \section{Cauchy-Schwarz Quadratic Mutual Information}
@@ -572,8 +574,10 @@ allowing CSQMI to be computed in roughly one seventh of the amount of time.
 Like SMI, CSQMI is non-negative and zero only when its arguments are independent
 (i.e. when $p(x, y) = p(x)p(y)$). Figure~\ref{fig:mi_vs_csqmi} shows that CSQMI and SMI are
 similar when evaluated on an OG with a beam-based sensor model, and control actions
-that maximize CSQMI guide the robot to unexplored space. For discussion regarding
-explicit calculation of CSQMI, the reader should refer to Charrow et al.~\cite{charrow2015icra}.
+that maximize CSQMI guide the robot to unexplored space. The reader should refer
+to Charrow et al.~\cite{charrow2015icra} for discussion regarding
+explicit calculation of CSQMI between an OG map and a beam-based sensor
+measurement.
 
 Given the numerous benefits of CSQMI, $\text{I}_{\text{CS}}\left(\mbf{m};\mbf{z}_{\mbf{\tau}}\left(\mbf{x}_{\mbf{\tau}}\right)\right)$
 is a suitable choice
@@ -638,7 +642,7 @@ function~\eqref{eq:active_perception_csqmi}. The chosen reward function,
 CSQMI~\cite{principe2010information},
 resembles Shannon's original definition of mutual information, but can be computed
 more efficiently when its arguments are an OG map and a sequence
-time-ordered beam-based sensor measurements~\cite{charrow2015icra}.
+of time-ordered beam-based sensor measurements~\cite{charrow2015icra}.
 
 Furthermore, Chapter~\ref{chapter2} discussed three methods for generating
 dynamically feasible and collision-free actions through the robot's
