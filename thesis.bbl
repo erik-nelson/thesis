@@ -1,5 +1,11 @@
 \begin{thebibliography}{10}
 
+\bibitem{abbas2006entropy}
+Ali~E Abbas.
+\newblock Entropy methods for joint distributions in decision analysis.
+\newblock {\em Engineering Management, IEEE Transactions on}, 53(1):146--159,
+  2006.
+
 \bibitem{acar2002sensor}
 Ercan~U Acar and Howie Choset.
 \newblock Sensor-based coverage of unknown environments: Incremental
@@ -75,6 +81,18 @@ Hans Jacob~S Feder, John~J Leonard, and Christopher~M Smith.
 \newblock Adaptive mobile robot navigation and mapping.
 \newblock {\em The International Journal of Robotics Research}, 18(7):650--668,
   1999.
+
+\bibitem{geiger2011information}
+Bernhard~C Geiger, Christian Feldbauer, and Gernot Kubin.
+\newblock Information loss in static nonlinearities.
+\newblock In {\em Wireless Communication Systems (ISWCS), 2011 8th
+  International Symposium on}, pages 799--803. IEEE, 2011.
+
+\bibitem{geiger2013signal}
+Bernhard~C Geiger and Gernot Kubin.
+\newblock Signal enhancement as minimization of relevant information loss.
+\newblock In {\em Systems, Communication and Coding (SCC), Proceedings of 2013
+  9th International ITG Conference on}, pages 1--6. VDE, 2013.
 
 \bibitem{gonzalez2002navigation}
 Hector~H Gonzalez-Banos and Jean-Claude Latombe.
@@ -240,6 +258,11 @@ Camillo~J Taylor and D~Kriegman.
 Sebastian Thrun, Wolfram Burgard, and Dieter Fox.
 \newblock {\em Probabilistic robotics}.
 \newblock MIT press, 2005.
+
+\bibitem{tishby2000information}
+Naftali Tishby, Fernando~C Pereira, and William Bialek.
+\newblock The information bottleneck method.
+\newblock {\em arXiv preprint physics/0004057}, 2000.
 
 \bibitem{vallve2014dense}
 Joan Vallv{\'e} and Juan Andrade-Cetto.

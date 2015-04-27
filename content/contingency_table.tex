@@ -1,0 +1,65 @@
+\begin{sidewaystable*}[Ht!]
+  \caption[A contingency table for occupancy grid compression
+  distributions.]{Contingency table for a compression from the OG region
+  $\mbf{m}^{R}$ to $\tilde{\mbf{m}}^{R}$. \texttt{O} and \texttt{E} stand for \texttt{OCC} and \texttt{EMP}. \label{tab:contingency}}
+    \centering
+    \scalebox{0.9}
+    {
+    \renewcommand{\arraystretch}{3}
+    \begin{tabular}{| c | c | c | c | c | c | c | c |}
+        \cline{3-7}
+        \multicolumn{2}{c|}{}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c}{$\tilde{\mbf{m}}^{R}$}
+        & \multicolumn{1}{c}{}
+        & \multicolumn{1}{c|}{}
+        & \multicolumn{1}{c}{}
+        \\ \cline{3-8}
+        \multicolumn{2}{c|}{}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{E}} & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$,
+        \texttt{O}} & $\dots$ & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{E}} & \scalebox{0.9}{\texttt{O},
+        \texttt{O}, $\dots$, \texttt{O}} & Total \\ \cline{1-4}\cline{6-8}
+        \multirow{5}{*}{$\mbf{m}^{R}$}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{E}} &
+        $w_{2}\cdot(1-\tilde{\mbf{o}}^{1}) \cdot
+        \prod_{i=1}^{R}(1-\mbf{o}_{i}^{R})$ & $0$ & $\dots$ & $0$ & $w_{3}\cdot
+        \tilde{\mbf{o}}^{1}\cdot \prod_{i=1}^{R}(1-\mbf{o}_{i}^{R})$ &
+        $\prod_{i=1}^{R}(1-\mbf{o}_{i}^{R})$\\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{E}, \texttt{E}, $\dots$, \texttt{O}} &
+        $w_{1}\cdot(1-\tilde{\mbf{o}}^{1})\cdot \mbf{o}_{1}^{R}\cdot
+        \prod_{i=2}^{R}(1-\mbf{o}_{i}^{R})$ & $0$ & $\dots$ & $0$ &
+        $w_{4}\cdot\tilde{\mbf{o}}^{1}\cdot \mbf{o}_{1}\cdot
+        \prod_{i=2}^{R}(1-\mbf{o}_{i}^{R})$ & $\mbf{o}_{1}\cdot
+        \prod_{i=2}^{R}(1-\mbf{o}_{i}^{R})$\\ \cline{2-4}\cline{6-8}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\ddots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c}{$\vdots$}
+        &
+        \multicolumn{1}{c|}{$\vdots$} \\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{E}} & $ w_{1}
+        \cdot (1-\tilde{\mbf{o}}^{1})\cdot (1-\mbf{o}_{1}^{R}) \cdot
+        \prod_{i=2}^{R} \mbf{o}_{i}^{R}$ & $0$ & $\dots$ & $0$ & $w_{4}\cdot
+        \tilde{\mbf{o}}^{1}\cdot (1-\mbf{o}_{1}^{R}) \cdot \prod_{i=2}^{R}
+        \mbf{o}_{i}^{R}$ & $(1-\mbf{o}_{1}^{R}) \cdot \prod_{i=2}^{R} \mbf{o}_{i}^{R}$\\ \cline{2-4}\cline{6-8}
+        & \scalebox{0.9}{\texttt{O}, \texttt{O}, $\dots$, \texttt{O}} &
+        $w_{1}\cdot(1-\tilde{\mbf{o}}^{1})\cdot \prod_{i=1}^{R}\mbf{o}_{i}^{R}$
+        & $0$ & $\dots$ & $0$ & $w_{4}\cdot\tilde{\mbf{o}}^{1}\cdot
+        \prod_{i=1}^{R}\mbf{o}_{i}^{R}$ & $\prod_{i=1}^{R}\mbf{o}_{i}^{R}$ \\ \cline{1-4}\cline{6-8}
+        \multicolumn{1}{c|}{}
+        & Total & $1-\tilde{\mbf{o}}^{1}$ & $0$ & $\dots$ & $0$ &
+        $\tilde{\mbf{o}}^{1}$ & 1 \\ \cline{2-8}
+    \end{tabular}
+    }
+\end{sidewaystable*}
+
+
