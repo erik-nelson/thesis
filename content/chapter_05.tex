@@ -1,17 +1,109 @@
-%\chapter{Compressed Maps for Active Perception}
-\chapter{}
+\chapter{Conclusion}
 \label{chapter5}
 
-Additionally, the
-information lost when compressing an OG map from one cell resolution to another
-correlates with the \textit{complexity} of the map - the density of free and
-occupied space.
+\section{Summary}
 
+Autonomous mobile robots operating in unknown environments often require the
+ability to explore and characterize their surroundings for the purpose of
+generating a map, or for more complex tasks such as searching for objects,
+identifying threats, or tracking waypoints through unseen territory. In all of
+these applications, minimizing time and energy expenditure is of critical importance,
+suggesting that an exploring robot should be as efficient and intelligent as
+possible. Exploration can be broken into two components: defining and ranking informative
+actions that can be taken in the future, and pursuing the most informative action while
+simultaneously localizing and generating a map. This thesis explored one method for
+making the first component more efficient, thereby enabling consideration of
+either more actions in the same amount of time, or the same amount of
+actions in a shorter amount of time. The consideration of a larger number of
+actions leads to choosing more informative paths. The consideration of
+actions in a shorter amount of time leads to increased planning
+frequency and velocity. Combined, these implications allow a robot to explore
+an unknown environment more efficiently.
 
-%\section{Adapting the Map Resolution Online}
+Chapter~\ref{chapter2} provided an overview of foundations relevant to the
+active perception task. These foundations culminated in an optimization that
+drives a robot towards unexplored space in its map by maximizing an
+information-theoretic reward function. The optimization is performed over
+possible future actions, which reside in a space too large for dense online
+reward evaluation. Action generation techniques were introduced to identify actions
+likely to yield high amounts of information about a map, therefore
+constraining the space that the active perception optimization must be performed
+over. Frontier seeding had the advantage of providing the guarantee that all
+unknown space would eventually be explored, but was also limited to only choosing
+actions that would globally reduce map uncertainty. By contrast, the two motion
+primitive techniques myopically and greedily selected actions that were likely to
+locally be informative, but were not able to guarantee that the map would completely be
+explored.
 
-%\section{Adapting Exploration Behavior to the Map Resolution}
+Chapter~\ref{chapter3} discussed map compression as a means of increasing the
+efficiency of evaluating information-theoretic reward on actions. Map
+compression was motivated by the fact that the time required to evaluate CSQMI
+reward is linear in a map's resolution, and by the observation that a map
+sometimes contains large amounts of redundancy and uniformity. A map compression
+strategy was developed using the Principle of Relevant Information, a technique
+borrowed from rate distortion theory, which
+minimizes divergence between the compressed and uncompressed map representation
+while simulatenously minimizing the entropy of the compressed map.
+Several results from Chapter~\ref{chapter3} demonstrate that map compression
+leads to small, but tolerable distortions to CSQMI reward, and yields large
+efficiency gains for the exploration task.
 
-\section{Results}
+Finally, Chapter~\ref{chapter4} examined distortions to mutual information
+between a sensor measurement and map when the map undergoes compression.
+Map compression and sensing accuracy were found to be competing objectives; to
+minimize distortion to mutual information, one should choose no compression,
+whereas to maximize efficiency of the exploration task, one should choose
+maximum compression. These competing objectives were balanced using the
+Information Bottleneck method, a technique borrowed from signal processing.
+Performing the Information Bottleneck optimization on a set of occupancy grids
+compressed to different resolutions allows one to choose a compression that
+makes the exploration task as efficient as possible without drastically altering which
+actions are chosen. Since the Information Bottleneck optimization is dependent on the
+structure of the robot's local map, an adaptive strategy was used to recompute
+an optimal map resolution
+whenever the robot entered a significantly different area of its environment. Performing this
+adaptation online caused a ground robot to change its planning frequency and velocity
+in response to the complexity of its surroundings.
 
-\section{Chapter Summary}
+\section{Future Work}
+\label{sec:future_work}
+
+There exist many interesting avenues for future research on the topic of
+efficient exploration. This section mentions several that are immediate
+and worth further pursuit.
+
+The map compression optimizations developed in Chapters~\ref{chapter3}
+and~\ref{chapter4} complement
+existing multi-resolution map data structures such as an
+octrees~\cite{wurm2010octomap} and NDT maps~\cite{saarinen2013normal}. The PRI compression
+strategy can be used to determine occupancy probabilities in lower resolution
+cells, and the IB optimization can be used to determine a proper resolution for
+queries on the data structure. Combining the approaches from this thesis with these map
+representations encourages a closer examination of how to calculate
+information-theoretic reward on maps with cells of non-uniform resolution.
+
+All results in this thesis were generated using 3D occupancy grids. However, no
+experiments utilized or necessitated exploration into the third dimension, since
+the ground robot used for experimentation was constrained to a flat floor. A natural
+future work would include investigating the benefits and complications of map compression
+in domains where a robot must explore a 3D space. It is expected that 3D
+environments will require a larger number of actions for exploration, which
+would increase the utility offered by map compression.
+
+Highly compressible areas in a map tend to have nearly uniform
+occupancy probabilities in the uncompressed map. This observation could be leveraged to plan
+trajectories through areas that are both informative and sparse with obstacles.
+As the robot's velocity increases, planning safe and obstacle-free paths becomes
+increasingly important, welcoming strategies for avoiding obstacle-dense regions.
+
+In Chapter~\ref{chapter4}, the coupling between compression level and velocity
+was simple and na\"{i}ve. In reality, the maximum safe velocity that a robot can
+explore is a function of planning frequency, map update frequency, action count,
+dynamic constraints, and many other parameters. A more thorough model of the robot's dynamics and
+a more tightly coupled implementation might allow the robot to navigate at
+higher speeds.
+
+Finally, the introduction of multiple robots into the exploration task raises interesting
+questions about whether robots should share a map, which robot controls the
+map's resolution, and how multiple robots should explore in the presence of distorted
+information-theoretic rewards.

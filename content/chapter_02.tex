@@ -1,4 +1,4 @@
-\chapter{Foundations}
+\chapter{Active Perception Foundations}
 \label{chapter2}
 
 This thesis draws upon prior research from the robotics, information theory, and signal
@@ -25,9 +25,7 @@ selecting informative trajectories that drive through obstacle-free areas of the
 \label{sec:occ_grid_mapping}
 
 Occupancy grids (OGs) are a common and useful proabilistic map model for representing and
-reasoning about an unknown environment. The remainder of this
-thesis assumes that the robot's environment is represented as an OG.
-Figures~\ref{fig:frontiers},~\ref{fig:sensor_frontier} and~\ref{fig:og} depict occupancy grids,
+reasoning about an unknown environment~\cite{elfes1989using}. The remainder of this thesis assumes that the robot's environment is represented as an OG.  Figures~\ref{fig:motivation},~\ref{fig:frontiers},~\ref{fig:sensor_frontier} and~\ref{fig:og} depict occupancy grids,
 where black cells represent areas of the environment occupied by an obstacle, white cells
 represent areas that do not contain obstacles, and grey cells represent
 locations with unknown occupancy status.
@@ -52,7 +50,7 @@ cell occupancy probabilities:
 For notational simplicity, the map conditioned on random variables
 $\mbf{x}_{1:t}$ and $\mbf{z}_{1:t}$ will henceforth be written as $p\left(\mbf{m}\right)
 \equiv p\left(\mbf{m} \ \vert \ \mbf{x}_{1:t}, \mbf{z}_{1:t}\right)$, and the probability of occupancy
-for a grid cell $i$ as $o_{i}\equiv p\left(m_{i}=\texttt{OCC}\ \vert \
+for a grid cell $m_i$ as $o_{i}\equiv p\left(m_{i}=\texttt{OCC}\ \vert \
 \mbf{x}_{1:t}, \mbf{z}_{1:t}\right)$.
 Unobserved grid cells are assigned a uniform prior such that
 $\{o_{i} = 1 - o_{i} = 0.5\}_{i=1}^{K}$. This implies that the robot is
@@ -84,7 +82,7 @@ may be updated with
 %
 where the term $L\left(m_{i}\,  \vert \mbf{z}_{t}\right)$ represents the robot's inverse sensor model~\cite{thrun2005probabilistic}.
 
-\section{Active Perception}
+\section{Active Perception as an Optimization}
 \label{sec:active_perception}
 
 Active perception is the idea that a machine should continually guide itself to states in
@@ -138,14 +136,19 @@ action $\mbf{x}_{\mbf{\tau}}$.
 Unfortunately, the active perception optimizaton faces the \textit{curse of dimensionality};
 the size of $\mc{X}$ grows exponentially with the length of the time horizon $\tau$.
 As $\tau$ increases in size, it quickly becomes infeasible to evaluate $\mc{J}$ over all
-possible actions in $\mc{X}$. This inefficiency motivates generating a
-fixed-size set candidate actions that are likely to be informative prior to optimizing~\eqref{eq:active_perception}.
+possible actions in $\mc{X}$. This inefficiency is the primary reason that dense
+evaluation of a reward function over a map is infeasible for high planning
+frequencies. Instead, to remain computationally tractable, one can generate a
+fixed-size set of candidate actions that are likely to be informative prior to
+optimizing~\eqref{eq:active_perception}. Because the candidate action set is a
+subset of $\mc{X}$, it is possible, and in many situations likely, that the most
+informative possible action will not be considered.
 
 \section{Action Generation}
 \label{sec:action_generation}
 
 The primary concern of action generation is to suggest a fixed-size set of feasible actions
-$\mc{X}$ that are likely to be informative. A suitable choice of $\mc{J}$ can be
+$\hat{\mc{X}}$ that are likely to be informative. A suitable choice of $\mc{J}$ can be
 evaluated on these actions to choose an optimal exploration action
 using~\eqref{eq:active_perception}. Several
 action generation options exist.
@@ -164,8 +167,8 @@ globally across the robot's map, guaranteeing that the robot will never become
 trapped in a dead-end or a location where its local map is already fully
 explored (i.e. a local minimum in information space).
 
-Identifying frontiers before planning to them avoids planning feasible
-trajectories to many future locations. Frontiers can be ranked by the
+Identifying frontiers before planning to them avoids planning
+trajectories to many future locations in a single planning cycle. Frontiers can be ranked by the
 information-theoretic reward offered from their locations, and the resulting sorted list
 of frontiers can be iterated through until a dynamically feasible and
 collision-free trajectory is found. Planning from an initial state to a goal state
@@ -187,13 +190,6 @@ simulating the robot's path when moving at a constant linear and angular
 velocity for a specified amount of time.
 Actions resulting from this approach form arcs of a circle with a radius that is a
 function of the specified linear and angular velocity (Fig.~\ref{fig:motion_prims}).
-%
-\begin{figure}[hb]
-  \centering
-  \includegraphics[width=0.9\textwidth]{motion_primitives.pdf}
-  \caption[A forward-arc motion primitive dictionary.]{Nine motion primitives generated with $\omega = \{-0.05, -0.04,
-  \dots, 0.05\}$ rad/s, $v = 1.0$ m/s.\label{fig:motion_prims}}
-\end{figure}
 
 Consider a robot following the arc of a
 circle with velocity $v$ and rotational velocity $\omega$. Assuming the robot's
@@ -268,6 +264,20 @@ Sequentially incrementing $T$ in~\eqref{eq:motion_primitive_generator}
 produces a sampling of poses lying along an arc
 parameterized by the robot's velocity and angular velocity, with origin $\mbf{x}_{t}$.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\textwidth]{motion_primitives.pdf}
+  \caption[A forward-arc motion primitive dictionary.]{Nine motion primitives generated with $\omega = \{-0.05, -0.04,
+  \dots, 0.05\}$ rad/s, $v = 1.0$ m/s.\label{fig:motion_prims}}
+\end{figure}
+ %
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth, trim=10mm 45mm 10mm 80mm]{lattice_graph.pdf}
+    \caption[A forward-arc motion primitive library.]{A primitive library with a depth of three constructed from a
+    dictionary of four motion primitives. \label{fig:primitive_library}}
+\end{figure}
+
 A sampling of actions with varying $v$ and $w$ values (such as that depicted in
 Fig.~\ref{fig:motion_prims}) is referred to as a
 primitive \textit{dictionary}. To generate more actions, one can construct a
@@ -278,12 +288,12 @@ primitives is rotated and translated to leaf nodes in the tree until a specified
 depth is reached. A primitive library is shown in
 Fig.~\ref{fig:primitive_library}.
 %
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7\textwidth, trim=10mm 45mm 10mm 80mm]{lattice_graph.pdf}
-  \caption[A forward-arc motion primitive library.]{A primitive library with a depth of three constructed from a
-  dictionary of four motion primitives. \label{fig:primitive_library}}
-\end{figure}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=0.7\textwidth, trim=10mm 45mm 10mm 80mm]{lattice_graph.pdf}
+%  \caption[A forward-arc motion primitive library.]{A primitive library with a depth of three constructed from a
+%  dictionary of four motion primitives. \label{fig:primitive_library}}
+%\end{figure}
 
 Forward-arc motion primitives are pre-computed prior to deployment into an
 unknown environment, making them an efficient choice for real-time exploration. Collision
@@ -318,7 +328,9 @@ constraints. \label{fig:lattice_graph}}
 \section{Generalized Entropies and Divergences}
 \label{sec:entropy_and_divergence}
 
-Two fundamental building blocks of information theory are entropy and
+Two fundamental building blocks of information theory that will be used to
+formulate occupancy grid compression in Chapters~\ref{chapter3}
+and~\ref{chapter4} are entropy and
 divergence. The former describes the amount of uncertainty in a random variable,
 or equivalently, the random variable's information content. The latter is a
 distance metric between probability distributions that describes the
@@ -400,7 +412,8 @@ distributions, $p$ and $q$ into the Cauchy-Schwarz inequality~\cite{rudin1964pri
   p(x)
   q(x)
   \quad \text{(discrete)}
-  \\[1cm]
+  %\\[1cm]
+  \\
   \sqrt{
     \int_{\mc{X}}
     p^{2}(x)dx
@@ -415,7 +428,7 @@ distributions, $p$ and $q$ into the Cauchy-Schwarz inequality~\cite{rudin1964pri
   \quad \text{(continuous)}.
   \label{eq:cs_inequality}
 }
-%
+
 Cauchy-Schwarz divergence measures the extent of this inequality.
 %
 \eq{
@@ -626,7 +639,7 @@ locations in its map by maximizing an information information-theoretic reward f
 {
  \mbf{x}_{\mbf{\tau}}^{*}
  &=
- \argmax_{\mbf{x}_{\mbf{\tau}} \in \mc{X}}
+ \argmax_{\mbf{x}_{\mbf{\tau}} \in \hat{\mc{X}}}
  \
  \text{I}_{\text{CS}}\left(\mbf{m},
  \mbf{z}_{\mbf{\tau}}(\mbf{x}_{\mbf{\tau}})\right).
@@ -643,7 +656,7 @@ function~\eqref{eq:active_perception_csqmi}. The chosen reward function,
 CSQMI~\cite{principe2010information},
 resembles Shannon's original definition of mutual information, but can be computed
 more efficiently when its arguments are an OG map and a sequence
-of time-ordered beam-based sensor measurements~\cite{charrow2015icra}.
+of beam-based sensor measurements~\cite{charrow2015icra}.
 
 Furthermore, Chapter~\ref{chapter2} discussed three methods for generating
 dynamically feasible and collision-free actions through the robot's

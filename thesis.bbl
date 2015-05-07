@@ -76,6 +76,12 @@ Erik Einhorn, C~Schroter, and H~Gross.
 \newblock In {\em Robotics and Automation (ICRA), 2011 IEEE International
   Conference on}, pages 1843--1848. IEEE, 2011.
 
+\bibitem{elfes1989using}
+Alberto Elfes.
+\newblock {\em Occupancy grids: a probabilistic framework for robot perception
+  and navigation}.
+\newblock PhD thesis, Carnegie Mellon University, 1989.
+
 \bibitem{feder1999adaptive}
 Hans Jacob~S Feder, John~J Leonard, and Christopher~M Smith.
 \newblock Adaptive mobile robot navigation and mapping.
@@ -221,6 +227,14 @@ Alfred Renyi.
 Walter Rudin.
 \newblock {\em Principles of mathematical analysis}, volume~3.
 \newblock McGraw-Hill New York, 1964.
+
+\bibitem{saarinen2013normal}
+Jari Saarinen, Henrik Andreasson, Todor Stoyanov, Juha Ala-Luhtala, and Achim~J
+  Lilienthal.
+\newblock Normal distributions transform occupancy maps: Application to
+  large-scale online 3d mapping.
+\newblock In {\em Robotics and Automation (ICRA), 2013 IEEE International
+  Conference on}, pages 2233--2238. IEEE, 2013.
 
 \bibitem{shannon1948mathematical}
 Claude~Elwood Shannon.

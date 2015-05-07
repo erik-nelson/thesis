@@ -1,2 +1,22 @@
 \begin{abstract}
+  This thesis proposes compressing a mobile robot's map as a means of increasing the speed
+  at which it is able to explore an unknown environment. Exploration is a useful capability
+  for autonomous mobile robots that must operate outside of controlled factories
+  and laboratories. Recent advances in exploration employ techniques
+  that compute control actions by analyzing information-theoretic metrics on the
+  robot's map. Information-theoretic metrics are generally computationally expensive to
+  evaluate, ultimately limiting the speed at which a robot is able to explore.
+
+  To reduce the computational cost of exploration, this thesis develops an information-theoretic
+  strategy for compressing a robot's map, in turn
+  allowing information-based reward to be evaluated more efficiently. To remain
+  effective for exploration, this strategy must compress maps in a way that
+  sacrifices a minimal amount of information about expected future sensor
+  measurements. Adaptively compressing the robot's map to different resolutions
+  in response to local environment complexity, and propagating the efficiency
+  gains through to planning frequency and velocity gives rise to intelligent
+  behaviors such as speeding up in open expanses. These methods are used to
+  demonstrate information-theoretic exploration through mazes and cluttered
+  indoor environments at speeds of 3 m/s in simulation, and 1.6 m/s on a ground
+  robot.
 \end{abstract}

@@ -3,11 +3,8 @@
 
 The remaining chapters of this thesis introduce novel extensions to active perception
 that make information-theoretic reward evaluation more
-efficient at the cost of information accuracy (Chapter~\ref{chapter4}), and
-modify the active perception reward function to allow the
-robot to consider and avoid complex regions
-in its local map (Chapter~\ref{chapter5}). Both
-of these extensions originate from the observation that the information content
+efficient at the cost of information-theoretic reward accuracy.
+These extensions originate from the observation that the information content
 of a robot's sensor measurement depends on the environment
 representation. In the case of OG maps, the cell resolution parameter shares an
 intricate relationship with the robot's exploration behaviors.
@@ -23,25 +20,25 @@ CSQMI technique from Charrow et al.~\cite{charrow2015icra}, this relationship is
 (Fig.~\ref{fig:csqmi_timing}). As will be shown, the resolution of an OG map can typically be halved several
 times before a significant amount of information about free and occupied space
 is lost. Repeatedly halving the map's resolution exponentially increases the
-speed of computing CSQMI, regardless of sensor range or number of beams. This
+speed of computing CSQMI for a fixed sensor range or number of beams. This
 can be seen by holding range constant and tracing vertical lines down Fig.~\ref{fig:csqmi_timing}.
+
+The following chapter investigates map compression as a means of increasing the
+efficiency of evaluating CSQMI reward. The incentive for increasing the efficiency of information-theoretic exploration
+is clear and immediate; any reduction to the time required to evaluate an
+information-theoretic reward function will enable a robot to explore more
+efficiently, in turn allowing it to initialize faster (Fig.~\ref{fig:motivation}), clear a
+building for threats more quickly, or explore a larger amount of space on an energy budget.
+
 
 \begin{figure}
   \centering
   \includegraphics[width=0.65\textwidth]{csqmi_timing.pdf}
   \caption[Time complexity of computing CSQMI for a varying map resolution.]{Time (median of $10^5$ samples)
-    to evaluate CSQMI for a single beam is empirically linear in both the OG resolution $\Delta$, and
+    to evaluate CSQMI for a single beam is empirically linear in both the OG
+    cell edge length $\Delta$, and
   the measurement range. \label{fig:csqmi_timing}}
 \end{figure}
-
-The incentive for increasing the efficiency of information-theoretic exploration
-is clear and immediate; any reduction to the time required to evaluate an
-information-theoretic reward function will enable a robot to explore at higher
-speeds, in turn allowing it to initialize (build a map) faster, clear a
-building for threats more quickly, or explore a larger amount of space on an energy budget.
-The following chapter investigates the problem of map compression, ultimately
-yielding a compression technique that will act as a basis for the
-active perception extensions introduced in Chapters~\ref{chapter4} and~\ref{chapter5}.
 
 Several others have proposed strategies for map compression. The OctoMap
 framework~\cite{wurm2010octomap} builds an octree data structure to efficiently store the
@@ -59,8 +56,9 @@ using the Principle of Relevant Information~\cite{principe2010information}. In c
 works on map compression, the proposed strategy approaches the compression problem from an information
 theory perspective, optimizing a functional that describes the distortion between the
 map and its compressed form. The proposed map compression strategy yields a
-simple compression algorithm that is founded on rate
-distortion theory.
+simple compression algorithm. The compression strategy developed can be used to complement
+existing multi-resolution mapping frameworks, such as
+octomap~\cite{wurm2010octomap} or NDT maps~\cite{saarinen2013normal}.
 
 \section{The Principle of Relevant Information}
 \label{sec:pri}
@@ -278,7 +276,7 @@ $\tilde{\mbf{o}}^{1}$:
 }
 %
 In order to fully constrain the problem, it is important to note that
-$p(\tilde{\mbf{m}}^{R})$ is a Bernoulli distribution; all of the cells in
+$p(\tilde{\mbf{m}}^{R})$ is a Bernoulli distribution. All of the cells in
 $\tilde{\mbf{m}}^{R}$ have a uniform probability of occupancy and therefore
 cannot differ from one another, as they must ultimately be compressed to a
 scalar that represents the occupancy probability of a single cell. In other
@@ -424,17 +422,16 @@ where $p_{\text{occ}}$ and $p_{\text{free}}$ are the thresholds for occupied and
 \section{Occupancy Grid Pyramids}
 \label{sec:og_pyramid}
 
-In some cases it is useful to store multiple versions of the robot's map that are compressed
-to different final resolutions. For example, Chapters~\ref{chapter4}
-and~\ref{chapter5} will compare maps of different resolutions to
+In some situations it is useful to store multiple versions of the robot's map that are compressed
+to different final resolutions. For example, Chapter~\ref{chapter4}
+will compare maps of different resolutions to
 investigate the amount of information lost about a sensor measurement through
-compression, and to analyze the map's obstacle-density. In cases where
-multiple map resolutions are required, it will prove useful to define an
-\textit{occupancy grid pyramid}. This name is in reference to the image pyramid,
+compression. An \textit{occupancy grid pyramid} is a multi-resolution map data
+structure that holds maps of several resolutions. This name is in reference to the image pyramid,
 a multi-resolution image data structure used commonly in computer vision~\cite{adelson1984pyramid}.
 
-To create an OG pyramid, one may simply compress a base OG to different final
-resolutions such that each compressed map in the pyramid has $2^{-d}$ times as many
+To create an OG pyramid, one may simply apply increasing compressions to a base
+OG. Each compressed map in the pyramid has $2^{-d}$ times as many
 cells as the previous.
 %
 \eq{
@@ -458,7 +455,7 @@ A three-level OG pyramid is depicted in Fig.~\ref{fig:og_pyramid}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{pyramid.pdf}
+  \includegraphics[width=0.4\textwidth]{pyramid.pdf}
   \caption[Diagram of a three-level OG pyramid.]{A three-level OG pyramid\label{fig:og_pyramid}}
 \end{figure}
 
@@ -647,7 +644,7 @@ shown in each figure to demonstrate completeness after exploration.
 \end{figure}
 
 \begin{table}[t]
-  \caption{Simulated exploration trial results
+  \caption[Simulated exploration trial results.]{Simulated exploration trial results
   (Fig.~\ref{fig:pri_result3}).\label{tab:pri_result_table}}
   \centering
   \begin{tabular}{| c | c | c | c | c |}
@@ -668,9 +665,13 @@ Chapter~\ref{chapter3} formulated map compression as an information-theoretic
 optimization using the Principle of Relevant Information. The optimization was
 solved by decomposing an uncompressed OG into independent square (cubic in 3D) regions, and
 compressing each region such that both its entropy and divergence with respect
-to the uncompressed region were minimized. The PRI solution was solved lending equal weight
-to minimum entropy and minimum divergence (i.e. $\lambda = 1$), which gave a simple
-compression rule with three cases.
+to the uncompressed region were minimized. The PRI compression problem was solved lending equal
+weight to minimum entropy and minimum divergence (i.e. $\lambda = 1$), which gave a simple
+compression rule with three cases: a cell in the compressed OG can take on a
+value of either $p_{\text{free}}$, $p_{\text{occ}}$, or $\frac{1}{2}$. The PRI compression strategy was applied to a
+map of a large warehouse environment, and was shown to preserve boundaries
+between free and unknown space, and to expand occupied cells for $\eta \in (0,
+1)$.
 
 Heuristics were introduced to avoid zero-valued or one-valued probabilities
 in compressed OGs, and to ensure that occupied cells in
@@ -680,5 +681,13 @@ increasing compression.
 
 Applying the PRI compression strategy to maps in a real cluttered warehouse
 environment (Fig.~\ref{fig:pri_result1}), and in simulated maze environments
-(Figs.~\ref{fig:pri_result2} and~\ref{fig:pri_result3}) \comment{finish}
+(Figs.~\ref{fig:pri_result2} and~\ref{fig:pri_result3}) allowed the robot to plan
+actions more efficiently, which was hypothesized by Fig.~\ref{fig:csqmi_timing}.
+Propagating the gains in planning efficiency through
+to the robot's dynamics enabled the robot to explore faster when calculating
+CSQMI reward with respect to a compressed map. After significant amounts of
+compression, the robot began to select suboptimal exploration actions
+(Figs.~\ref{fig:pri_result2_d} and~\ref{fig:pri_result3_c}). The distortion to
+CSQMI reward with increasing map compression necessitates a
+method for choosing a compression level in response to the robot's environment.
 

@@ -22,7 +22,8 @@ planning frequencies. However, map compression and mutual information accuracy
 are two competing objectives. If one's goal is to select the best actions for
 exploration, one should choose not to compress the map at all. Likewise, if one's
 goal is to evaluate reward over actions as efficiently as possible, one should
-compress the map as much as possible. The optimal exploration strategy lies somewhere in between.
+compress the map as much as possible. In the context of exploration, the optimal
+compression strategy lies somewhere in between.
 
 To balance these two competing objectives, a second
 optimization, based on the Information Bottleneck
@@ -33,7 +34,7 @@ the Information Bottleneck optimization online allows a robot to compress its ma
 minimally distorts mutual information reward, and simultaneously enables more
 efficient reward evaluation.
 
-As it explores, a robot is constantly evaluating reward in new areas of the
+As a robot explores, it is constantly evaluating reward in new areas of the
 environment. A map resolution that does not distort mutual information reward in one area
 of the environment may drastically distort it in another. An adaptive strategy
 is therefore developed to select an optimal map resolution whenever the complexity of the
@@ -109,7 +110,7 @@ The IB method can be combined with the PRI compression strategy in
 Chapter~\ref{chapter3} to determine a function, $C^{*}$, that compresses the map
 as much as possible without sacrificing a significant amount of information relevant
 to a sensor measurement,
-$z$. To perform the optimization, one builds an $n$-level OG pyramid,
+$\mbf{z}$. To perform the optimization, one builds an $n$-level OG pyramid,
 $\mc{C}_{n}(\mbf{m})$ (Section~\ref{sec:og_pyramid}), from the robot's map, and selects the compression that
 minimizes the IB functional:
 %
@@ -136,7 +137,7 @@ minimizes the IB functional:
   \,
   ;
   \,
-  z
+  \mbf{z}
   \right).
   \label{eq:ib_arg_opt}
 }
@@ -149,15 +150,16 @@ al.~\cite{charrow2015icra} (described in Section~\ref{sec:csqmi}). However, a
 method for calculating the first term in~\eqref{eq:ib_arg_opt} is not yet well-defined.
 It is also not yet clear what $\mbf{m}$ itself should be. Optimizing the IB functional
 over the robot's entire map will cause the first term to converge onto a steady-state value
-as the robot explores and learns a larger and larger map. If $z$ observed the entire map at
-once this would not be a problem, but it is more likely that $z$ will only observe a small
+as the robot explores and learns a larger and larger map. If $\mbf{z}$ observed the entire map at
+once this would not be a problem, but it is more likely that $\mbf{z}$ will only observe a small
 section of the environment at a time. It is more reasonable to make $\mbf{m}$
 refer to a subsection of the total map in the vicinity of the sensor measurement. This choice
 allows the robot to choose a map resolution specifically tailored to locations where it is also evaluating
-the reward $\text{I}_{\text{CS}}(C\left(\mbf{m}\right)\, ;\, z)$. One sensible
-choice for $\mbf{m}$ is a bounding box around the sensor measurement $z$.
+the reward $\text{I}_{\text{CS}}(C\left(\mbf{m}\right)\, ;\, \mbf{z})$. One sensible
+choice for $\mbf{m}$ is a bounding box around the sensor measurement $\mbf{z}$.
 
-Computing $\text{I}_{\text{CS}}(\mbf{m}\, ;\, C(\mbf{m}))$ requires substituting
+Computing the first term in the IB functional, $\text{I}_{\text{CS}}(\mbf{m}\,
+;\, C(\mbf{m}))$, requires substituting
 $\mbf{m}$ and $C(\mbf{m})$ into the definition of CSQMI
 in~\eqref{eq:csqmi}:
 %
@@ -283,8 +285,7 @@ and collision checking). The remaining three constants, $w_{2:4}$, balance the e
 of $w_{1}$ such that the conditional distributions $p(\mbf{m}^{R} \, \vert \,
 \tilde{\mbf{m}}^{R})$ and $p(\tilde{\mbf{m}}^{R} \, \vert \, \mbf{m}^{R})$ across the rows
 and columns of Table~\ref{tab:contingency} all sum to the marginal
-distributions on the bottom-most row and right-most column. \comment{Explain
-coefficients better}.
+distributions on the bottom-most row and right-most column.
 
 With the joint distribution $p(\mbf{m}^{R}, \tilde{\mbf{m}}^{R})$ fixed, one can
 compute the first term in the IB cost function~\eqref{eq:ib_arg_opt}
@@ -329,16 +330,19 @@ lead to inaccurate reward values.
 The most na\"{i}ve strategy for adapting the map compression to the environment
 is to reevaluate the IB optimization for each planned action. This
 strategy results in the best map resolution possible for every evaluation of CSQMI
-reward. However, it also nullifies the benefits of map compression;
-the IB optimization itself requires computing CSQMI over an OG
-pyramid, making it more inefficient than evaluating CSQMI on the uncompressed
+reward. However, it also completely nullifies the benefits of map compression.
+The IB optimization itself requires computing CSQMI over an OG
+pyramid, making this strategy more inefficient than evaluating CSQMI on the uncompressed
 OG. A more useful strategy is to reperform the IB optimization whenever the robot enters a significantly
 different area of the environment. Adapting to local changes in
 the map requires a method for detecting such changes.
 
-One measure of environment complexity is the mean entropy of cells in a
-submap where the robot is planning actions. Other options, such as mean or minimum distance to obstacles,
-ratio of free space to occupied space in a local map, or feature-based
+One way to detect changes in the robot's local map is to look for changes to the mean
+entropy of cells in a submap where the robot is planning actions. Mean entropy is
+chosen for this section, noting that other options,
+such as monitoring changes to the mean or minimum distance to obstacles,
+changes to the ratio of free space to occupied space in a local map, or changes
+to feature-based
 map descriptors can also be used. A submap can similarly be defined in many ways; for
 the purposes of this section it is defined by a bounding box around the robot's
 planned actions, with an added buffer for sensor range (Fig.~\ref{fig:local_map}).
@@ -354,9 +358,8 @@ planned actions, with an added buffer for sensor range (Fig.~\ref{fig:local_map}
 
 Every time an IB optimization is performed, the mean entropy,
 $\bar{\text{H}}_{\text{last}}$, of cells in the
-current submap is cached. Afterwards, the mean entropy of cells in the current submap,
-$\bar{\mbf{m}} \subseteq \mbf{m}$, is continously monitored. A new IB
-optimization is triggered whenever the difference between
+most recent submap is cached. Afterwards, this value is continuously
+monitored. A new IB optimization is triggered whenever the difference between
 $\bar{\text{H}}_{\text{last}}$ and the mean entropy of cells in the current
 submap surpasses a threshold, $\delta_{\text{H}} \in (0, 1)$:
 %
@@ -366,10 +369,12 @@ submap surpasses a threshold, $\delta_{\text{H}} \in (0, 1)$:
   -
   \bar{\text{H}}_{\text{last}}
   \right|
-  \ge \delta_{\text{H}}.
+  \ge \delta_{\text{H}},
   \label{eq:reoptimize}
 }
 %
+where $\bar{\mbf{m}} \subseteq \mbf{m}$ is the robot's most recent submap.
+
 When the criteria in~\eqref{eq:reoptimize} is met a random planned action is chosen,
 and an OG pyramid is computed in the submap defined by that action. The IB optimization~\eqref{eq:ib_arg_opt}
 is then performed using the computed OG pyramid and randomly selected action to
@@ -405,17 +410,21 @@ adapted compression level and velocity estimate. Dashed lines in
 Fig.~\ref{fig:ib_exploration_plots} correspond to times when the adaptation condition
 in~\eqref{eq:reoptimize} is met. Colored dashed lines mark times
 when~\eqref{eq:reoptimize} is met and~\eqref{eq:ib_arg_opt} computes a new
-compression level $n$. The robot's planner generated forward-arc motion
-primitives. Since these primitives expand in the robot's
-forward direction, entropy is generally computed in the submap in front of
-the robot. The optimal compression level remains at $4$ in most of the free regions
-in the trial, and reduces to $0$, $1$, and $2$ in locations where compression results
-in large reductions to CSQMI reward (e.g. the first $n=0$ region occurs as the robot
-moves through a doorway). Although only a loose coupling was enforced in this experiment,
+compression level $n$. The forward-arc motion primitive strategy was used for
+action generation (Section~\ref{subsec:fa_motion_primitives}). Since generated primitives
+expanded in the robot's forward direction, entropy was generally computed in a submap in front of
+the robot. The optimal compression level remained at $4$ in most of the free regions
+in the trial, and reduced to $0$, $1$, and $2$ in locations where compression results
+in large reductions to CSQMI reward (e.g. the first $n=0$ region occurred as the robot
+moved through a doorway). Although only a loose coupling was enforced in this experiment,
 vehicle velocity was adapted in response to the robot's estimated planning frequency.
 Propagating efficiency gains from map compression through to planning frequency
-and velocity (although loosely) caused the robot accelerated and decelerated when entering highly
-compressible and incompressible areas, respectively.
+and velocity caused the robot to accelerate and decelerate when entering highly
+compressible and incompressible areas, respectively. With no map compression,
+the maximum planning frequency would have been restricted to $2$ Hz, whereas
+by compressing the robot's map, the maximum
+planning frequency was increased to $24$ Hz in areas with
+$n=4$.
 
 \begin{figure}
     \centering
@@ -447,29 +456,44 @@ compressible and incompressible areas, respectively.
 
 \begin{figure}
   \centering
-  \begin{subfigure}[t]{0.64\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{ground_experiment_map2.pdf}
-    \caption{Exploration path \label{fig:ib_exploration_path}}
-  \end{subfigure}
-  \\
-  \begin{subfigure}[t]{0.8\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{ground_experiment.pdf}
-    \caption{Time evolution of $n$ and velocity.\label{fig:ib_exploration_plots}}
-  \end{subfigure}
-  \caption{As the ground robot explores, it recomputes an optimal OG resolution and
-  adapts its dynamics accordingly.\label{fig:ground_experiment}}
+    \includegraphics[width=0.9\textwidth]{ground_experiment_map2.pdf}
+    \caption[Exploration path with adaptive compression.]{Ground robot
+    exploration path (beginning at $(0, 0)$) with adaptive map compression.
+  \label{fig:ground_experiment}}
 \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{ground_plots.pdf}
+    \caption{Time evolution of $n$, planning frequency, and velocity.
+    \label{fig:ib_exploration_plots}}
+\end{figure}
+
+\clearpage
 
 \section{Chapter Summary}
 
-%During exploration, a robot will continuously plan actions to new locations in its map
-%and evaluate an information-based reward function to select its next movement. So far,
-%the PRI strategy from Chapter~\ref{chapter3} can be used to compress the map, increasing the
-%efficiency of evaluating CSQMI reward. In addition, the IB
-%method from Section~\ref{sec:ib_spec} can be used to choose an
-%amount of compression that causes CSQMI reward to suffer a minimal
-%amount of distortion.
+Chapter~\ref{chapter4} provided a strategy for choosing a map compression that simultaneously
+minimizes the redundancy between the compressed and uncompressed maps, and minimizes distortion
+to CSQMI between the robot's map and expected future sensor measurements. The
+problem of balancing these two competing objectives was solved using the
+Information Bottleneck method.
 
+Since an exploring robot can travel through multiple distinct sections of an
+environment in one deployment, the optimal map compression should be adapted
+whenever the robot enters an area that is significantly different. Section~\ref{sec:adapting}
+introduced an entropy-based criteria to identify when the robot's local map has changed.
+Upon satisfying this criteria, an exploring robot can perform an IB optimization to
+recompute an optimal map compression based on the local environment.
+
+The IB optimization was shown to favor large map compressions for low values of
+$\beta$, and no map compression for high values (Fig.~\ref{fig:loss_compression}).
+A ground robot experiment was carried out to examine exploration performance with
+adaptive map compression. The robot was able to adapt its map compression,
+planning frequency, and velocity to changes in its local environment
+(Figs.~\ref{fig:ground_experiment} and~\ref{fig:ib_exploration_plots}).
+Without compressing its map, the computational cost of evaluating CSQMI limited
+the robot's planning frequency to $2$ Hz. However, the adaptive map compression
+strategies introduced in Chapters~\ref{chapter3} and~\ref{chapter4} allowed
+for planning frequencies of up to $24$ Hz in highly compressible areas.
 
